@@ -26,3 +26,4 @@ hs_err_pid*
 .idea/
 pom.xml
 tpePOO.iml
+target/
