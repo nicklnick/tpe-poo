@@ -23,4 +23,15 @@ public class Rectangle extends Figure {
         return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
     }
 
+    @Override
+    public void move(double x, double y) {
+        topLeft.move(x,y);
+        bottomRight.move(x,y);
+    }
+
+    @Override
+    public boolean figureBelongs(Point point) {
+        return point.getX() > topLeft.getX() && point.getX() < bottomRight.getX() &&
+                point.getY() > topLeft.getY() && point.getY() < bottomRight.getY();
+    }
 }
