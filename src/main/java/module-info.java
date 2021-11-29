@@ -1,4 +1,4 @@
-module com.example.tpePOO {
+module frontend {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
