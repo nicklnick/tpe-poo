@@ -9,6 +9,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -33,6 +35,8 @@ public class PaintPane extends BorderPane {
 	private final ToggleButton squareButton = new ToggleButton("Cuadrado");
 	private final ToggleButton ellipseButton = new ToggleButton("Elipse");
 	private final ToggleButton lineButton = new ToggleButton("Línea");
+	private final Button sendToFrontButton = new Button("Al Frente");
+	private final Button sendToBackButton = new Button("Al Fondo");
 
 	// Dibujar una figura
 	private Point startPoint;
@@ -47,15 +51,21 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton,
-									squareButton, ellipseButton, lineButton};
+									squareButton, ellipseButton, lineButton };
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
+		Button[] buttonsArr = {sendToFrontButton, sendToBackButton};
+		for(Button button : buttonsArr) {
+			button.setMinWidth(90);
+			button.setCursor(Cursor.HAND);
+		}
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
+		buttonsBox.getChildren().addAll(buttonsArr);
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
