@@ -31,6 +31,9 @@ public class PaintPane extends BorderPane {
 	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
 	private final ToggleButton rectangleButton = new ToggleButton("Rectángulo");
 	private final ToggleButton circleButton = new ToggleButton("Círculo");
+	private final ToggleButton squareButton = new ToggleButton("Cuadrado");
+	private final ToggleButton ellipseButton = new ToggleButton("Elipse");
+	private final ToggleButton lineButton = new ToggleButton("Línea");
 
 	// Dibujar una figura
 	private Point startPoint;
@@ -44,7 +47,8 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasStateWrapped canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton};
+		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton,
+									squareButton, ellipseButton, lineButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -74,8 +78,18 @@ public class PaintPane extends BorderPane {
 			}
 			else if(circleButton.isSelected()) {
 				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new WrappedOval(new Circle(startPoint, circleRadius), gc) ;
-			} else {
+				newFigure = new WrappedCircle(new Circle(startPoint, circleRadius), gc) ;
+			} else if(squareButton.isSelected()){
+				newFigure = new WrappedRectangle(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc);
+			} else if(ellipseButton.isSelected()) {
+				newFigure = new WrappedCircle(new Ellipse(startPoint, endPoint), gc);
+			}
+			/*
+			else if(lineButton.isSelected()) {
+				newFigure = new WrappedLine(new Line(startPoint, endPoint), gc);
+			}
+			 */
+			else {
 				return ;
 			}
 			canvasState.addFigure(newFigure);
