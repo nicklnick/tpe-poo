@@ -29,7 +29,29 @@ public class Circle extends Figure {
     }
 
     @Override
+    public double getX() {
+        return centerPoint.getX() - radius;
+    }
+
+    @Override
+    public double getY() {
+        return centerPoint.getY() - radius;
+    }
+
+    @Override
+    public double getHeight() {
+        return 2 * radius;
+    }
+
+    @Override
+    public double getWidth() {
+        return getHeight();        //!!!!!!!!!!!!!!!!!!
+    }
+
+    @Override
     public void move(double x, double y) {
         centerPoint.move(x,y);
     }
+
+
 }

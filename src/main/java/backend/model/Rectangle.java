@@ -34,4 +34,24 @@ public class Rectangle extends Figure {
         return point.getX() > topLeft.getX() && point.getX() < bottomRight.getX() &&
                 point.getY() > topLeft.getY() && point.getY() < bottomRight.getY();
     }
+
+    @Override
+    public double getX() {
+        return topLeft.getX();
+    }
+
+    @Override
+    public double getY() {
+        return topLeft.getY();
+    }
+
+    @Override
+    public double getHeight() {
+        return Math.abs(topLeft.getY() - bottomRight.getY());
+    }
+
+    @Override
+    public double getWidth() {
+        return Math.abs(topLeft.getX() - bottomRight.getX());
+    }
 }
