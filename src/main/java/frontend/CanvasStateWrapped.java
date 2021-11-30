@@ -14,6 +14,13 @@ public class CanvasStateWrapped {
         list.add(figure);
     }
 
+    public void addFigures(List<WrappedFigure> figures) {
+        list.addAll(figures);
+    }
+
+    public void clearFigures() {
+        list.clear();
+    }
     public Iterable<WrappedFigure> figures() {
         return new ArrayList<>(list);
     }

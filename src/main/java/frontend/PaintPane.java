@@ -17,6 +17,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class PaintPane extends BorderPane {
 
 	// BackEnd
@@ -139,6 +144,14 @@ public class PaintPane extends BorderPane {
 				}
 				if (found) {
 					statusPane.updateStatus(label.toString());
+					if(sendToFrontButton.isPressed()) {
+						// Mandar figura/s al frente
+						sendToFront(selectedFigures);
+					}
+					else if(sendToBackButton.isPressed()){
+						// Mandar figura/s al fondo
+						sendToBack(selectedFigures);
+					}
 				} else {
 					selectedFigure = null;
 					statusPane.updateStatus("Ninguna figura encontrada");
@@ -158,6 +171,25 @@ public class PaintPane extends BorderPane {
 		});
 		setLeft(buttonsBox);
 		setRight(canvas);
+	}
+
+	private void sendToFront(List<WrappedFigure> selectedFigures) {
+		List<WrappedFigure> aux = new ArrayList<>(selectedFigures);
+		for(WrappedFigure fig : canvasState.figures()) {
+			aux.add(fig);
+		}
+		canvasState.clearFigures();
+		canvasState.addFigures(aux);
+	}
+
+	private void sendToBack(List<WrappedFigure> selectedFigures) {
+		List<WrappedFigure> aux = new ArrayList<>();
+		for(WrappedFigure fig : canvasState.figures()) {
+			aux.add(fig);
+		}
+		aux.addAll(selectedFigures);
+		canvasState.clearFigures();
+		canvasState.addFigures(aux);
 	}
 
 	void redrawCanvas() {
