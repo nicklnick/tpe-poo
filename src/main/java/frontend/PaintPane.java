@@ -15,6 +15,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class PaintPane extends BorderPane {
 
 	// BackEnd
@@ -38,7 +42,7 @@ public class PaintPane extends BorderPane {
 	private Point startPoint;
 
 	// Seleccionar una figura
-	private WrappedFigure selectedFigure;
+	private List<WrappedFigure> selectedFigures;
 
 	// StatusBar
 	private StatusPane statusPane;
@@ -46,6 +50,7 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasStateWrapped canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
+		this.selectedFigures = new ArrayList<>();
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton,
 									squareButton, ellipseButton, lineButton};
 		ToggleGroup tools = new ToggleGroup();
@@ -69,7 +74,7 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 
-			WrappedFigure newFigure;
+			WrappedFigure newFigure = null; //creo que hay error aca, antes no era necesario iniciar en null
 
 			if(lineButton.isSelected()) {
 				newFigure = new WrappedLine(new Line(startPoint, endPoint), gc);
@@ -85,6 +90,12 @@ public class PaintPane extends BorderPane {
 					newFigure = new WrappedRect(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc);
 				} else if(ellipseButton.isSelected()) {
 					newFigure = new WrappedOval(new Ellipse(startPoint, endPoint), gc);
+				} else if(selectionButton.isSelected()){
+					for(WrappedFigure wrappedFigure : canvasState.figures()){
+						if( wrappedFigure.getFigure().encapsulatedIn(startPoint,endPoint)){
+							selectedFigures.add(wrappedFigure);
+						}
+					}
 				}
 				else{
 					return;
@@ -123,14 +134,14 @@ public class PaintPane extends BorderPane {
 				for (WrappedFigure wrappedFigure : canvasState.figures()) {
 					if( wrappedFigure.getFigure().figureBelongs(eventPoint) ) {
 						found = true;
-						selectedFigure = wrappedFigure;
+						selectedFigures.add(wrappedFigure);
 						label.append(wrappedFigure.toString());
 					}
 				}
 				if (found) {
 					statusPane.updateStatus(label.toString());
 				} else {
-					selectedFigure = null;
+					selectedFigures = new ArrayList<>();
 					statusPane.updateStatus("Ninguna figura encontrada");
 				}
 				redrawCanvas();
@@ -141,8 +152,11 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-				if( selectedFigure != null)
-					selectedFigure.getFigure().move(diffX, diffY);
+				if(!Objects.equals(selectedFigures, new ArrayList<>())) {
+					for(WrappedFigure figure : selectedFigures) {
+						figure.getFigure().move(diffX, diffY);
+					}
+				}
 				redrawCanvas();
 			}
 		});
@@ -153,7 +167,7 @@ public class PaintPane extends BorderPane {
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(WrappedFigure wrappedFigure : canvasState.figures()) {
-			if(wrappedFigure == selectedFigure) {
+			if(selectedFigures.contains(wrappedFigure)) {
 				gc.setStroke(Color.RED);
 			} else {
 				gc.setStroke(lineColor);

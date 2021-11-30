@@ -1,5 +1,7 @@
 package backend.model;
 
+import java.util.Objects;
+
 public class Rectangle extends Figure {
 
 
@@ -33,6 +35,25 @@ public class Rectangle extends Figure {
     public boolean figureBelongs(Point point) {
         return point.getX() > topLeft.getX() && point.getX() < bottomRight.getX() &&
                 point.getY() > topLeft.getY() && point.getY() < bottomRight.getY();
+    }
+
+    @Override
+    public boolean encapsulatedIn(Point startPoint, Point endPoint) {
+        return topLeft.getX() >= startPoint.getX() && topLeft.getY() >= startPoint.getY()
+                && bottomRight.getX() <= endPoint.getX() && bottomRight.getY() <= endPoint.getY();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rectangle rectangle = (Rectangle) o;
+        return Objects.equals(topLeft, rectangle.topLeft) && Objects.equals(bottomRight, rectangle.bottomRight);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(topLeft, bottomRight);
     }
 
     @Override

@@ -29,6 +29,11 @@ public class Circle extends Figure {
     }
 
     @Override
+    public boolean encapsulatedIn(Point startPoint, Point endPoint) {
+        return false;
+    }
+
+    @Override
     public double getX() {
         return centerPoint.getX() - radius;
     }
