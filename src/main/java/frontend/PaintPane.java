@@ -1,8 +1,6 @@
 package frontend;
 
-import backend.model.Circle;
-import backend.model.Point;
-import backend.model.Rectangle;
+import backend.model.*;
 import frontend.wrappers.WrappedOval;
 import frontend.wrappers.WrappedFigure;
 import frontend.wrappers.WrappedRect;
@@ -78,11 +76,11 @@ public class PaintPane extends BorderPane {
 			}
 			else if(circleButton.isSelected()) {
 				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new WrappedCircle(new Circle(startPoint, circleRadius), gc) ;
+				newFigure = new WrappedOval(new Circle(startPoint, circleRadius), gc) ;
 			} else if(squareButton.isSelected()){
-				newFigure = new WrappedRectangle(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc);
+				newFigure = new WrappedRect(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc);
 			} else if(ellipseButton.isSelected()) {
-				newFigure = new WrappedCircle(new Ellipse(startPoint, endPoint), gc);
+				newFigure = new WrappedOval(new Ellipse(startPoint, endPoint), gc);
 			}
 			/*
 			else if(lineButton.isSelected()) {
