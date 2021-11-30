@@ -25,5 +25,5 @@ hs_err_pid*
 # Cosas de IntelliJ
 .idea/
 pom.xml
-tpePOO.iml
+*.iml
 target/
