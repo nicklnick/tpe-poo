@@ -4,8 +4,8 @@ import backend.model.Figure;
 import backend.model.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
 
-public class WrappedRectangle extends WrappedFigure{
-    public WrappedRectangle(Figure fig, GraphicsContext gc) {
+public class WrappedRect extends WrappedFigure{
+    public WrappedRect(Figure fig, GraphicsContext gc) {
         super(fig, gc);
     }
 

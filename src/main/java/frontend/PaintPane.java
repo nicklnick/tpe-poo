@@ -1,13 +1,11 @@
 package frontend;
 
-import backend.CanvasState;
 import backend.model.Circle;
-import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
-import frontend.wrappers.WrappedCircle;
+import frontend.wrappers.WrappedOval;
 import frontend.wrappers.WrappedFigure;
-import frontend.wrappers.WrappedRectangle;
+import frontend.wrappers.WrappedRect;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -72,11 +70,11 @@ public class PaintPane extends BorderPane {
 			}
 			WrappedFigure newFigure;
 			if(rectangleButton.isSelected()) {
-				newFigure = new WrappedRectangle(new Rectangle(startPoint, endPoint), gc) ;
+				newFigure = new WrappedRect(new Rectangle(startPoint, endPoint), gc) ;
 			}
 			else if(circleButton.isSelected()) {
 				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new WrappedCircle(new Circle(startPoint, circleRadius), gc) ;
+				newFigure = new WrappedOval(new Circle(startPoint, circleRadius), gc) ;
 			} else {
 				return ;
 			}

@@ -44,4 +44,20 @@ public class Line extends Figure{
         return betweenPointsX(point) && Double.compare(point.getY(), gradient()* point.getX() + calcB()) == 0;
     }
 
+    @Override
+    public double getX(){
+        return firstPoint.getX();
+    }
+    @Override
+    public double getY(){
+        return firstPoint.getY();
+    }
+    @Override
+    public double getWidth(){
+        return Math.abs(firstPoint.getX() - secondPoint.getX());
+    }
+    @Override
+    public double getHeight(){
+        return Math.abs(firstPoint.getY() - secondPoint.getY());
+    }
 }

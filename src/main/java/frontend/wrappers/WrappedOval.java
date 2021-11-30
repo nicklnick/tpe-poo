@@ -4,8 +4,8 @@ import backend.model.Circle;
 import backend.model.Figure;
 import javafx.scene.canvas.GraphicsContext;
 
-public class WrappedCircle extends WrappedFigure {
-    public WrappedCircle(Figure fig, GraphicsContext gc) {
+public class WrappedOval extends WrappedFigure {
+    public WrappedOval(Figure fig, GraphicsContext gc) {
         super(fig, gc);
     }
 
