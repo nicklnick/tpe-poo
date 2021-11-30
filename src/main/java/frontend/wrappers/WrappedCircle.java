@@ -1,4 +1,4 @@
-package frontend;
+package frontend.wrappers;
 
 import backend.model.Circle;
 import javafx.scene.canvas.GraphicsContext;

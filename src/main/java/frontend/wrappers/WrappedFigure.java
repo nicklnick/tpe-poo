@@ -1,4 +1,4 @@
-package frontend;
+package frontend.wrappers;
 
 import backend.model.Figure;
 import javafx.scene.canvas.GraphicsContext;
