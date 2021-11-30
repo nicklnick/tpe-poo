@@ -79,7 +79,7 @@ public class PaintPane extends BorderPane {
 				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
 				newFigure = new WrappedCircle(new Circle(startPoint, circleRadius), gc) ;
 			} else if(squareButton.isSelected()){
-				newFigure = new WrappedRectangle(new Square(startPoint, endPoint.getX()), gc);
+				newFigure = new WrappedRectangle(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc);
 			} else if(ellipseButton.isSelected()) {
 				newFigure = new WrappedCircle(new Ellipse(startPoint, endPoint), gc);
 			}
