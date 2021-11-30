@@ -1,25 +1,20 @@
 package backend.model;
 
 public class Ellipse extends Rectangle {
-    private final double sMayorAxis, sMinorAxis;
+    private final double xAxis, yAxis;
 
     public Ellipse(Point topLeft, Point bottomRight) {
         super(topLeft, bottomRight);
 
-        double aux1 = bottomRight.getX() - topLeft.getX();
-        double aux2 = bottomRight.getY() - topLeft.getY();
-        if(aux1 > aux2) {
-            sMayorAxis = aux1;
-            sMinorAxis = aux2;
-        }
-        else {
-            sMayorAxis = aux2;
-            sMinorAxis = aux1;
-        }
+        xAxis = bottomRight.getX() - topLeft.getX();
+        yAxis = bottomRight.getY() - topLeft.getY();
     }
+
+    public double getxAxis() { return xAxis; }
+    public double getyAxis() { return yAxis; }
 
     @Override
     public String toString() {
-        return String.format("Elipse [DMayor: %.2f, DMenor: %.2f]", sMayorAxis, sMinorAxis);
+        return String.format("Elipse [EjeX: %.2f, EjeY: %.2f]", xAxis, yAxis);
     }
 }
