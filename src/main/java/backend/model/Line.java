@@ -2,6 +2,7 @@ package backend.model;
 
 public class Line extends Figure{
     private final Point firstPoint, secondPoint;
+    private static final double delta = 10;
     public Line(Point firstPoint, Point secondPoint){
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
@@ -41,7 +42,7 @@ public class Line extends Figure{
 
     @Override
     public boolean figureBelongs(Point point) {
-        return betweenPointsX(point) && Double.compare(point.getY(), gradient()* point.getX() + calcB()) == 0;
+        return betweenPointsX(point) && Math.abs(point.getY() - (gradient()* point.getX() + calcB())) <  delta ;
     }
 
     @Override
@@ -54,10 +55,10 @@ public class Line extends Figure{
     }
     @Override
     public double getWidth(){
-        return Math.abs(firstPoint.getX() - secondPoint.getX());
+        return firstPoint.getX() - secondPoint.getX();
     }
     @Override
     public double getHeight(){
-        return Math.abs(firstPoint.getY() - secondPoint.getY());
+        return firstPoint.getY() - secondPoint.getY();
     }
 }

@@ -1,6 +1,7 @@
 package frontend;
 
 import backend.model.*;
+import frontend.wrappers.WrappedLine;
 import frontend.wrappers.WrappedOval;
 import frontend.wrappers.WrappedFigure;
 import frontend.wrappers.WrappedRect;
@@ -67,29 +68,32 @@ public class PaintPane extends BorderPane {
 			if(startPoint == null) {
 				return ;
 			}
-			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
-				return ;
-			}
+
 			WrappedFigure newFigure;
-			if(rectangleButton.isSelected()) {
-				newFigure = new WrappedRect(new Rectangle(startPoint, endPoint), gc) ;
-			}
-			else if(circleButton.isSelected()) {
-				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new WrappedOval(new Circle(startPoint, circleRadius), gc) ;
-			} else if(squareButton.isSelected()){
-				newFigure = new WrappedRect(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc);
-			} else if(ellipseButton.isSelected()) {
-				newFigure = new WrappedOval(new Ellipse(startPoint, endPoint), gc);
-			}
-			/*
-			else if(lineButton.isSelected()) {
+
+			if(lineButton.isSelected()) {
 				newFigure = new WrappedLine(new Line(startPoint, endPoint), gc);
 			}
-			 */
+			else if( ! (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())){
+				if(rectangleButton.isSelected()) {
+					newFigure = new WrappedRect(new Rectangle(startPoint, endPoint), gc) ;
+				}
+				else if(circleButton.isSelected()) {
+					double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
+					newFigure = new WrappedOval(new Circle(startPoint, circleRadius), gc) ;
+				} else if(squareButton.isSelected()){
+					newFigure = new WrappedRect(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc);
+				} else if(ellipseButton.isSelected()) {
+					newFigure = new WrappedOval(new Ellipse(startPoint, endPoint), gc);
+				}
+				else{
+					return;
+				}
+			}
 			else {
 				return ;
 			}
+
 			canvasState.addFigure(newFigure);
 			startPoint = null;
 			redrawCanvas();

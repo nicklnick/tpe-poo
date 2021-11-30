@@ -10,6 +10,6 @@ public class WrappedLine extends WrappedFigure{
 
     @Override
     public void draw() {
-        gc.strokeLine(fig.getX(), fig.getY(),fig.getWidth(), fig.getHeight());
+        gc.strokeLine(fig.getX(), fig.getY(),fig.getX() - fig.getWidth(), fig.getY() - fig.getHeight());
     }
 }
