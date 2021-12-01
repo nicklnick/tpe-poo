@@ -2,10 +2,11 @@ package frontend.wrappers;
 
 import backend.model.Figure;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class WrappedLine extends WrappedFigure{
-    public WrappedLine(Figure fig, GraphicsContext gc) {
-        super(fig, gc);
+    public WrappedLine(Figure fig, GraphicsContext gc, Color edgeColor, double edgeWidth) {
+        super(fig, gc, edgeColor, null, edgeWidth);
     }
 
     @Override
