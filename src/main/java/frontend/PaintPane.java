@@ -17,12 +17,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
+
 public class PaintPane extends BorderPane {
 
 	// BackEnd
@@ -52,6 +50,8 @@ public class PaintPane extends BorderPane {
 
 	// StatusBar
 	private StatusPane statusPane;
+
+	private boolean selectionMode = false;
 
 	public PaintPane(CanvasStateWrapped canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -102,13 +102,14 @@ public class PaintPane extends BorderPane {
 					newFigure = new WrappedRect(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc);
 				} else if(ellipseButton.isSelected()) {
 					newFigure = new WrappedOval(new Ellipse(startPoint, endPoint), gc);
-				} else if(selectionButton.isSelected()){
+				} else if(selectionMode){
 					Figure imaginaryBox = new Rectangle(startPoint, endPoint);
 					for(WrappedFigure wrappedFigure : canvasState.figures()){
 						if( imaginaryBox.contains(wrappedFigure.getFigure().getFirstPoint()) && imaginaryBox.contains(wrappedFigure.getFigure().getSecondPoint())){
 							selectedFigures.add(wrappedFigure);
 						}
 					}
+					selectionMode = false;
 					return;
 				}
 				else{
@@ -142,17 +143,27 @@ public class PaintPane extends BorderPane {
 		});
 
 		canvas.setOnMouseClicked(event -> {
-			if(selectionButton.isSelected()) {
+			if(selectionMode && !selectedFigures.isEmpty()) {
+				StringBuilder label = new StringBuilder("Se seleccionó: ");
+				for(WrappedFigure figure : selectedFigures){
+					label.append(figure.toString());
+				}
+			}
+			else{
 				Point eventPoint = new Point(event.getX(), event.getY());
 				boolean found = false;
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for (WrappedFigure wrappedFigure : canvasState.figures()) {
-					if( wrappedFigure.getFigure().contains(eventPoint) && selectedFigures.isEmpty()) {
+				Iterator<WrappedFigure> iterator = canvasState.figures().iterator();
+				while(iterator.hasNext() && !found){
+					WrappedFigure wfig = iterator.next();
+					if (wfig.getFigure().contains(eventPoint)) {
 						found = true;
-						selectedFigures.add(wrappedFigure);
-						label.append(wrappedFigure.toString());
+						selectedFigures.clear();
+						selectedFigures.add(wfig);
+						label.append(wfig.toString());
 					}
 				}
+
 				if (found) {
 					statusPane.updateStatus(label.toString());
 					if(sendToFrontButton.isPressed()) {
@@ -172,17 +183,17 @@ public class PaintPane extends BorderPane {
 			}
 		});
 		canvas.setOnMouseDragged(event -> {
-			if(selectionButton.isSelected()) {
-				Point eventPoint = new Point(event.getX(), event.getY());
-				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
-				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-				if(!selectedFigures.isEmpty()) {
-					for(WrappedFigure figure : selectedFigures) {
-						figure.getFigure().move(diffX, diffY);
-					}
-				}
-				redrawCanvas();
+			if( selectedFigures.isEmpty() && selectionButton.isSelected()){	//no hay figuras seleccionadas, se quiere seleccionar con imaginaryBox
+				selectionMode = true;
+				return;
 			}
+			Point eventPoint = new Point(event.getX(), event.getY());
+			double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
+			double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
+			for(WrappedFigure figure : selectedFigures) {
+				figure.getFigure().move(diffX, diffY);
+			}
+			redrawCanvas();
 		});
 		setLeft(buttonsBox);
 		setRight(canvas);
