@@ -199,6 +199,19 @@ public class PaintPane extends BorderPane {
 		setLeft(buttonsBox);
 		setRight(canvas);
 
+		sendToBackButton.setOnAction(event -> {
+			if(!selectedFigures.isEmpty()){
+				sendToBack(selectedFigures);
+			}
+			redrawCanvas();
+		});
+		sendToFrontButton.setOnAction(event -> {
+			if(!selectedFigures.isEmpty()){
+				sendToFront(selectedFigures);
+			}
+			redrawCanvas();
+		});
+
 	}
 
 	private void sendToFront(List<WrappedFigure> selectedFigures) {
