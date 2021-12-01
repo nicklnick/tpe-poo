@@ -24,13 +24,18 @@ public class Circle extends Figure {
     }
 
     @Override
-    public boolean figureBelongs(Point point) {
+    public boolean contains(Point point) {
         return centerPoint.distanceTo(point) < radius;
     }
 
     @Override
-    public boolean encapsulatedIn(Point startPoint, Point endPoint) {
-        return false;
+    public Point getFirstPoint() {
+        return new Point(centerPoint.getX() - radius, centerPoint.getY() - radius);
+    }
+
+    @Override
+    public Point getSecondPoint() {
+        return new Point(centerPoint.getX() + radius, centerPoint.getY() + radius);
     }
 
     @Override

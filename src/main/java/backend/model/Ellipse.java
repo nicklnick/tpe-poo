@@ -6,8 +6,8 @@ public class Ellipse extends Rectangle {
     public Ellipse(Point topLeft, Point bottomRight) {
         super(topLeft, bottomRight);
 
-        xAxis = bottomRight.getX() - topLeft.getX();
-        yAxis = bottomRight.getY() - topLeft.getY();
+        xAxis = getBottomRight().getX() - getTopLeft().getX();
+        yAxis = getBottomRight().getY() - getTopLeft().getY();
     }
 
     public double getxAxis() { return xAxis; }

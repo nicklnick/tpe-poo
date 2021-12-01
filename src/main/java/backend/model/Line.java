@@ -7,11 +7,11 @@ public class Line extends Figure{
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
     }
-
+    @Override
     public Point getFirstPoint() {
         return firstPoint;
     }
-
+    @Override
     public Point getSecondPoint() {
         return secondPoint;
     }
@@ -41,7 +41,7 @@ public class Line extends Figure{
     }
 
     @Override
-    public boolean figureBelongs(Point point) {
+    public boolean contains(Point point) {
         if( Math.abs(firstPoint.getX()- secondPoint.getX()) < DELTA){
             return Math.abs(firstPoint.getX() - point.getX()) < DELTA && ((firstPoint.getY() >= point.getY() && secondPoint.getY() <= point.getY()) ||
                     (firstPoint.getY() <= point.getY() && secondPoint.getY() >= point.getY()));
@@ -49,10 +49,6 @@ public class Line extends Figure{
         return betweenPointsX(point) && Math.abs(point.getY() - (gradient()* point.getX() + calcB())) <  DELTA ;
     }
 
-    @Override
-    public boolean encapsulatedIn(Point startPoint, Point endPoint) {
-        return false;
-    }
 
     @Override
     public double getX(){

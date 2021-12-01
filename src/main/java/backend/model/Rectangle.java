@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Rectangle extends Figure {
 
 
-    protected final Point topLeft, bottomRight;
+    private final Point topLeft, bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
@@ -32,16 +32,21 @@ public class Rectangle extends Figure {
     }
 
     @Override
-    public boolean figureBelongs(Point point) {
+    public boolean contains(Point point) {
         return point.getX() > topLeft.getX() && point.getX() < bottomRight.getX() &&
                 point.getY() > topLeft.getY() && point.getY() < bottomRight.getY();
     }
 
     @Override
-    public boolean encapsulatedIn(Point startPoint, Point endPoint) {
-        return topLeft.getX() >= startPoint.getX() && topLeft.getY() >= startPoint.getY()
-                && bottomRight.getX() <= endPoint.getX() && bottomRight.getY() <= endPoint.getY();
+    public Point getFirstPoint() {
+        return getTopLeft();
     }
+
+    @Override
+    public Point getSecondPoint() {
+        return getBottomRight();
+    }
+
 
     @Override
     public boolean equals(Object o) {
