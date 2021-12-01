@@ -104,12 +104,11 @@ public class PaintPane extends BorderPane {
 					newFigure = new WrappedOval(new Ellipse(startPoint, endPoint), gc);
 				} else if(selectionMode){
 					Figure imaginaryBox = new Rectangle(startPoint, endPoint);
-					for(WrappedFigure wrappedFigure : canvasState.figures()){
-						if( imaginaryBox.contains(wrappedFigure.getFigure().getFirstPoint()) && imaginaryBox.contains(wrappedFigure.getFigure().getSecondPoint())){
+					for(WrappedFigure wrappedFigure : canvasState.figures()) {
+						if (imaginaryBox.contains(wrappedFigure.getFigure().getFirstPoint()) && imaginaryBox.contains(wrappedFigure.getFigure().getSecondPoint())) {
 							selectedFigures.add(wrappedFigure);
 						}
 					}
-					selectionMode = false;
 					return;
 				}
 				else{
@@ -143,16 +142,16 @@ public class PaintPane extends BorderPane {
 		});
 
 		canvas.setOnMouseClicked(event -> {
+			boolean found = false;
+			StringBuilder label = new StringBuilder("Se seleccionó: ");
+
 			if(selectionMode && !selectedFigures.isEmpty()) {
-				StringBuilder label = new StringBuilder("Se seleccionó: ");
 				for(WrappedFigure figure : selectedFigures){
 					label.append(figure.toString());
 				}
 			}
-			else{
+			else if(selectionButton.isSelected()){
 				Point eventPoint = new Point(event.getX(), event.getY());
-				boolean found = false;
-				StringBuilder label = new StringBuilder("Se seleccionó: ");
 				Iterator<WrappedFigure> iterator = canvasState.figures().iterator();
 				while(iterator.hasNext() && !found){
 					WrappedFigure wfig = iterator.next();
@@ -163,24 +162,23 @@ public class PaintPane extends BorderPane {
 						label.append(wfig.toString());
 					}
 				}
-
-				if (found) {
-					statusPane.updateStatus(label.toString());
-					if(sendToFrontButton.isPressed()) {
-						// Mandar figura/s al frente
-						sendToFront(selectedFigures);
-					}
-					else if(sendToBackButton.isPressed()){
-						// Mandar figura/s al fondo
-						sendToBack(selectedFigures);
-					}
-				} else {
-					selectedFigures.clear();
-					statusPane.updateStatus("Ninguna figura encontrada");
-				}
-				redrawCanvas();
-
 			}
+			if (found || (selectionMode && !selectedFigures.isEmpty())) {
+				statusPane.updateStatus(label.toString());
+				if(sendToFrontButton.isPressed()) {
+					// Mandar figura/s al frente
+					sendToFront(selectedFigures);
+				}
+				else if(sendToBackButton.isPressed()){
+					// Mandar figura/s al fondo
+					sendToBack(selectedFigures);
+				}
+			} else {
+				selectedFigures.clear();
+				statusPane.updateStatus("Ninguna figura encontrada");
+			}
+			selectionMode = false;
+			redrawCanvas();
 		});
 		canvas.setOnMouseDragged(event -> {
 			if( selectedFigures.isEmpty() && selectionButton.isSelected()){	//no hay figuras seleccionadas, se quiere seleccionar con imaginaryBox
