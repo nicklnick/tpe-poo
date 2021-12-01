@@ -166,16 +166,6 @@ public class PaintPane extends BorderPane {
 			}
 			if (found || (selectionMode && !selectedFigures.isEmpty())) {
 				statusPane.updateStatus(label.toString());
-				if(sendToFrontButton.isPressed()) {
-					// Mandar figura/s al frente
-					sendToFront(selectedFigures);
-					System.out.println("front");
-				}
-				else if(sendToBackButton.isPressed()){
-					// Mandar figura/s al fondo
-					sendToBack(selectedFigures);
-					System.out.println("back");
-				}
 			} else {
 				selectedFigures.clear();
 				statusPane.updateStatus("Ninguna figura encontrada");
