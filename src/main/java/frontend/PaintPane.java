@@ -152,7 +152,7 @@ public class PaintPane extends BorderPane {
 			}
 			else if(selectionButton.isSelected()){
 				Point eventPoint = new Point(event.getX(), event.getY());
-				ArrayList<WrappedFigure> list = canvasState.figures();
+				List<WrappedFigure> list = canvasState.figures();
 				ListIterator<WrappedFigure> iterator = list.listIterator(list.size());
 				while(iterator.hasPrevious() && !found){
 					WrappedFigure wfig = iterator.previous();
@@ -169,10 +169,12 @@ public class PaintPane extends BorderPane {
 				if(sendToFrontButton.isPressed()) {
 					// Mandar figura/s al frente
 					sendToFront(selectedFigures);
+					System.out.println("front");
 				}
 				else if(sendToBackButton.isPressed()){
 					// Mandar figura/s al fondo
 					sendToBack(selectedFigures);
+					System.out.println("back");
 				}
 			} else {
 				selectedFigures.clear();
@@ -200,22 +202,13 @@ public class PaintPane extends BorderPane {
 	}
 
 	private void sendToFront(List<WrappedFigure> selectedFigures) {
-		List<WrappedFigure> aux = new ArrayList<>(selectedFigures);
-		for(WrappedFigure fig : canvasState.figures()) {
-			aux.add(fig);
-		}
-		canvasState.clearFigures();
-		canvasState.addFigures(aux);
+		canvasState.figures().removeAll(selectedFigures);
+		canvasState.figures().addAll(selectedFigures);
 	}
 
 	private void sendToBack(List<WrappedFigure> selectedFigures) {
-		List<WrappedFigure> aux = new ArrayList<>();
-		for(WrappedFigure fig : canvasState.figures()) {
-			aux.add(fig);
-		}
-		aux.addAll(selectedFigures);
-		canvasState.clearFigures();
-		canvasState.addFigures(aux);
+		canvasState.figures().removeAll(selectedFigures);
+		canvasState.figures().addAll(0, selectedFigures);
 	}
 
 	void redrawCanvas() {

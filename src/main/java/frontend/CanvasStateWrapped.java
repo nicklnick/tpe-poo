@@ -21,8 +21,8 @@ public class CanvasStateWrapped {
     public void clearFigures() {
         list.clear();
     }
-    public ArrayList<WrappedFigure> figures() {
-        return new ArrayList<>(list);
+    public List<WrappedFigure> figures() {
+        return list;
     }
 
 }
