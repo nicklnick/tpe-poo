@@ -152,9 +152,10 @@ public class PaintPane extends BorderPane {
 			}
 			else if(selectionButton.isSelected()){
 				Point eventPoint = new Point(event.getX(), event.getY());
-				Iterator<WrappedFigure> iterator = canvasState.figures().iterator();
-				while(iterator.hasNext() && !found){
-					WrappedFigure wfig = iterator.next();
+				ArrayList<WrappedFigure> list = canvasState.figures();
+				ListIterator<WrappedFigure> iterator = list.listIterator(list.size());
+				while(iterator.hasPrevious() && !found){
+					WrappedFigure wfig = iterator.previous();
 					if (wfig.getFigure().contains(eventPoint)) {
 						found = true;
 						selectedFigures.clear();
@@ -195,6 +196,7 @@ public class PaintPane extends BorderPane {
 		});
 		setLeft(buttonsBox);
 		setRight(canvas);
+
 	}
 
 	private void sendToFront(List<WrappedFigure> selectedFigures) {
