@@ -209,6 +209,8 @@ public class PaintPane extends BorderPane {
 						selectedFigures.clear();
 						selectedFigures.add(wfig);
 						label.append(wfig.toString());
+
+						updateSliderAndColorPicker(wfig);
 					}
 				}
 			}
@@ -255,6 +257,12 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}
 		});
+	}
+
+	private void updateSliderAndColorPicker(WrappedFigure selectedFigure){
+		edgeWidth.setValue(selectedFigure.getEdgeWidth());			// Update data with shapes values
+		edgeColorPicker.setValue(selectedFigure.getEdgeColor());
+		fillColorPicker.setValue(selectedFigure.getFillColor());
 	}
 
 	private void sendToFront(List<WrappedFigure> selectedFigures) {
