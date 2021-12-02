@@ -39,13 +39,13 @@ public class PaintPane extends BorderPane {
 	private final Button sendToFrontButton = new Button("Al Frente");
 	private final Button sendToBackButton = new Button("Al Fondo");
 	private final Button delete = new Button("Borrar");
+	private final Text borde = new Text("Borde");
+	private final Text relleno = new Text("Relleno");
 
 	// FillColor Barra Izquierda
-
 	private ColorPicker fillColorPicker = new ColorPicker(FILL_COLOR);
 
 	// Edge Barra Izquierda
-
 	private ColorPicker edgeColorPicker = new ColorPicker(LINE_COLOR);
 	private Slider edgeWidth = new Slider(1,50,1);
 
@@ -64,6 +64,7 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		this.selectedFigures = new ArrayList<>();
+
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton,
 									squareButton, ellipseButton, lineButton };
 		ToggleGroup tools = new ToggleGroup();
@@ -78,7 +79,7 @@ public class PaintPane extends BorderPane {
 			button.setCursor(Cursor.HAND);
 		}
 
-		edgeWidth.setShowTickMarks(true);
+		edgeWidth.setShowTickMarks(true);								// Configuracion de slider
 		edgeWidth.setShowTickLabels(true);
 		edgeWidth.valueProperty().addListener(event -> {
 			if(! selectedFigures.isEmpty()){
@@ -88,15 +89,14 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		fillColorPicker.valueProperty().addListener(event -> {
+		fillColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker1
 			if(! selectedFigures.isEmpty()){
 				for(WrappedFigure wrappedFigure : selectedFigures)
 					wrappedFigure.setFillColor(fillColorPicker.getValue());
 				redrawCanvas();
 			}
 		});
-
-		edgeColorPicker.valueProperty().addListener(event -> {
+		edgeColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker2
 			if(! selectedFigures.isEmpty()){
 				for(WrappedFigure wrappedFigure : selectedFigures)
 					wrappedFigure.setEdgeColor(edgeColorPicker.getValue());
@@ -106,18 +106,23 @@ public class PaintPane extends BorderPane {
 
 
 		VBox buttonsBox = new VBox(10);
+
 		buttonsBox.getChildren().addAll(toolsArr);
 		buttonsBox.getChildren().addAll(buttonsArr);
-		buttonsBox.getChildren().addAll(new Text("Borde"), edgeWidth, edgeColorPicker);
-		buttonsBox.getChildren().addAll(new Text("Relleno"), fillColorPicker);
+		buttonsBox.getChildren().addAll(borde, edgeWidth, edgeColorPicker);
+		buttonsBox.getChildren().addAll(relleno, fillColorPicker);
 
-		buttonsBox.setPadding(new Insets(5));
+		buttonsBox.setPadding(new Insets(5));			// Configuracion de VBOX
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
-		gc.setLineWidth(1);
+
+		setLeft(buttonsBox);								// Posicionamiento de elementos
+		setRight(canvas);
+
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
 		});
+
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
 			if(startPoint == null) {
@@ -162,6 +167,7 @@ public class PaintPane extends BorderPane {
 			startPoint = null;
 			redrawCanvas();
 		});
+
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
@@ -183,15 +189,15 @@ public class PaintPane extends BorderPane {
 			boolean found = false;
 			StringBuilder label = new StringBuilder("Se seleccionó: ");
 
-			if(selectionMode && !selectedFigures.isEmpty()) {
+			if(selectionMode && !selectedFigures.isEmpty()) {				// Caso en cual se esta usando el drag para seleccionar
 				for(WrappedFigure figure : selectedFigures){
 					label.append(figure.toString());
 				}
 			}
-			else if(selectionButton.isSelected()){
+			else if(selectionButton.isSelected()){							// Caso en cual se hace click
 				Point eventPoint = new Point(event.getX(), event.getY());
 				List<WrappedFigure> list = canvasState.figures();
-				ListIterator<WrappedFigure> iterator = list.listIterator(list.size());
+				ListIterator<WrappedFigure> iterator = list.listIterator(list.size());			//Los elementos traceros son los que aparecen mas arriba
 				while(iterator.hasPrevious() && !found){
 					WrappedFigure wfig = iterator.previous();
 					if (wfig.getFigure().contains(eventPoint)) {
@@ -202,17 +208,18 @@ public class PaintPane extends BorderPane {
 					}
 				}
 			}
-			if (found || (selectionMode && !selectedFigures.isEmpty())) {
+			if (found || (selectionMode && !selectedFigures.isEmpty())) {	// Se hace click sobre figura
 				statusPane.updateStatus(label.toString());
-			} else {
+			} else {														// Se hace click fuera de cualquier figura
 				selectedFigures.clear();
 				statusPane.updateStatus("Ninguna figura encontrada");
 			}
 			selectionMode = false;
 			redrawCanvas();
 		});
+
 		canvas.setOnMouseDragged(event -> {
-			if( selectedFigures.isEmpty() && selectionButton.isSelected()){	//no hay figuras seleccionadas, se quiere seleccionar con imaginaryBox
+			if( selectedFigures.isEmpty() && selectionButton.isSelected()){		//no hay figuras seleccionadas, se quiere seleccionar con imaginaryBox
 				selectionMode = true;
 				return;
 			}
@@ -224,8 +231,6 @@ public class PaintPane extends BorderPane {
 			}
 			redrawCanvas();
 		});
-		setLeft(buttonsBox);
-		setRight(canvas);
 
 		sendToBackButton.setOnAction(event -> {
 			if(!selectedFigures.isEmpty()){
