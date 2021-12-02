@@ -1,6 +1,5 @@
 package frontend;
 
-import backend.model.Figure;
 import frontend.wrappers.WrappedFigure;
 
 import java.util.ArrayList;

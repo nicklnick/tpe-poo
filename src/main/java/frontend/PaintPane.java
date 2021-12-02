@@ -38,7 +38,7 @@ public class PaintPane extends BorderPane {
 	private final ToggleButton lineButton = new ToggleButton("Línea");
 	private final Button sendToFrontButton = new Button("Al Frente");
 	private final Button sendToBackButton = new Button("Al Fondo");
-	private final Button delete = new Button("Borrar");
+	private final Button deleteButton = new Button("Borrar");
 	private final Text borde = new Text("Borde");
 	private final Text relleno = new Text("Relleno");
 
@@ -73,7 +73,7 @@ public class PaintPane extends BorderPane {
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
-		Button[] buttonsArr = {delete, sendToFrontButton, sendToBackButton};
+		Button[] buttonsArr = {deleteButton, sendToFrontButton, sendToBackButton};
 		for(Button button : buttonsArr) {
 			button.setMinWidth(90);
 			button.setCursor(Cursor.HAND);
@@ -235,21 +235,21 @@ public class PaintPane extends BorderPane {
 		sendToBackButton.setOnAction(event -> {
 			if(!selectedFigures.isEmpty()){
 				sendToBack(selectedFigures);
+				redrawCanvas();
 			}
-			redrawCanvas();
 		});
 		sendToFrontButton.setOnAction(event -> {
 			if(!selectedFigures.isEmpty()){
 				sendToFront(selectedFigures);
+				redrawCanvas();
 			}
-			redrawCanvas();
 		});
 
-		delete.setOnAction(event -> {
+		deleteButton.setOnAction(event -> {
 			if( !selectedFigures.isEmpty()){
 				canvasState.figures().removeAll(selectedFigures);
+				redrawCanvas();
 			}
-			redrawCanvas();
 		});
 	}
 
