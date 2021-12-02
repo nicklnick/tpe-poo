@@ -1,20 +1,30 @@
 package backend;
 
 import backend.model.Figure;
+import frontend.wrappers.WrappedFigure;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CanvasState {
+public class CanvasState<V> {
 
-    private final List<Figure> list = new ArrayList<>();
+    private final List<V> list = new ArrayList<>();
 
-    public void addFigure(Figure figure) {
+    public void addFigure(V figure) {
         list.add(figure);
     }
 
-    public Iterable<Figure> figures() {
-        return new ArrayList<>(list);
+    public List<V> figures() {
+        return list;
     }
+
+    public void addFigures(List<V> figures) {
+        list.addAll(figures);
+    }
+
+    public void clearFigures() {
+        list.clear();
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package frontend;
 
+import backend.CanvasState;
 import backend.model.*;
 import frontend.wrappers.WrappedLine;
 import frontend.wrappers.WrappedOval;
@@ -20,7 +21,7 @@ import java.util.*;
 public class PaintPane extends BorderPane {
 
 	// BackEnd
-	private CanvasStateWrapped canvasState;
+	private CanvasState<WrappedFigure> canvasState;
 
 	// Canvas y relacionados
 	private Canvas canvas = new Canvas(800, 600);
@@ -28,6 +29,9 @@ public class PaintPane extends BorderPane {
 	private static final Color LINE_COLOR = Color.BLACK;
 	private static final Color FILL_COLOR = Color.YELLOW;
 	private static final double LINE_WIDTH = 1;
+	private static final int DEF_MIN_SLIDER = 1;
+	private static final int DEF_MAX_SLIDER = 50;
+	private static final int DEF_INCREMENT_SLIDER = 1;
 
 	// Botones Barra Izquierda
 	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
@@ -47,7 +51,7 @@ public class PaintPane extends BorderPane {
 
 	// Edge Barra Izquierda
 	private ColorPicker edgeColorPicker = new ColorPicker(LINE_COLOR);
-	private Slider edgeWidth = new Slider(1,50,1);
+	private Slider edgeWidth = new Slider(DEF_MIN_SLIDER, DEF_MAX_SLIDER, DEF_INCREMENT_SLIDER);
 
 	// Dibujar una figura
 	private Point startPoint;
@@ -60,7 +64,7 @@ public class PaintPane extends BorderPane {
 
 	private boolean selectionMode = false;
 
-	public PaintPane(CanvasStateWrapped canvasState, StatusPane statusPane) {
+	public PaintPane(CanvasState<WrappedFigure> canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		this.selectedFigures = new ArrayList<>();
