@@ -2,6 +2,8 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
+import frontend.actions.CreateAction;
+import frontend.actions.CustomAction;
 import frontend.wrappers.WrappedLine;
 import frontend.wrappers.WrappedOval;
 import frontend.wrappers.WrappedFigure;
@@ -45,6 +47,8 @@ public class PaintPane extends BorderPane {
 	private final Button deleteButton = new Button("Borrar");
 	private final Text borde = new Text("Borde");
 	private final Text relleno = new Text("Relleno");
+	private final Button undoButton = new Button("Deshacer");
+	private final Button redoButton = new Button("Rehacer");
 
 	// FillColor Barra Izquierda
 	private ColorPicker fillColorPicker = new ColorPicker(FILL_COLOR);
@@ -62,6 +66,10 @@ public class PaintPane extends BorderPane {
 	// StatusBar
 	private StatusPane statusPane;
 
+	private Stack<CustomAction> undoStack = new Stack<>();
+	private Stack<CustomAction> redoStack = new Stack<>();
+	private boolean undoState = false;
+
 	private boolean selectionMode = false;
 
 	public PaintPane(CanvasState<WrappedFigure> canvasState, StatusPane statusPane) {
@@ -77,7 +85,7 @@ public class PaintPane extends BorderPane {
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
-		Button[] buttonsArr = {deleteButton, sendToFrontButton, sendToBackButton};
+		Button[] buttonsArr = {deleteButton, sendToFrontButton, sendToBackButton, undoButton, redoButton};
 		for(Button button : buttonsArr) {
 			button.setMinWidth(90);
 			button.setCursor(Cursor.HAND);
@@ -161,7 +169,10 @@ public class PaintPane extends BorderPane {
 				else{
 					return;
 				}
-
+				CustomAction action = new CreateAction(canvasState, newFigure);
+				undoStack.push(action);
+				if(undoState)
+					undoState = false;
 			}
 			else {
 				return ;
@@ -256,6 +267,14 @@ public class PaintPane extends BorderPane {
 				canvasState.figures().removeAll(selectedFigures);
 				redrawCanvas();
 			}
+		});
+
+		undoButton.setOnAction(event -> {
+
+		});
+
+		redoButton.setOnAction(event ->{
+
 		});
 	}
 
