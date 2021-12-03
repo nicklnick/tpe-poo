@@ -8,7 +8,6 @@ import java.util.List;
 
 
 public abstract class CustomAction {
-    private List<WrappedFigure> actions = new LinkedList<>();
     protected CanvasState<WrappedFigure> state;
 
     public CustomAction(CanvasState<WrappedFigure> state){
@@ -19,6 +18,6 @@ public abstract class CustomAction {
 
     public abstract void redo();
 
-
+    protected abstract void savePrevious(List<WrappedFigure> figures);
 
 }

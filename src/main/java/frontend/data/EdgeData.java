@@ -4,9 +4,9 @@ import javafx.scene.paint.Color;
 
 public class EdgeData {
     private int id;
-    private int width;
+    private double width;
 
-    public EdgeData(int id, int width){
+    public EdgeData(int id, double width){
         this.id = id;
         this.width = width;
     }
@@ -15,7 +15,7 @@ public class EdgeData {
         return id;
     }
 
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 }
