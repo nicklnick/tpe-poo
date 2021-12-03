@@ -1,6 +1,7 @@
 package frontend.actions;
 
 import backend.CanvasState;
+import frontend.data.PositionData;
 import frontend.wrappers.WrappedFigure;
 
 import java.util.List;

@@ -18,6 +18,4 @@ public abstract class CustomAction {
 
     public abstract void redo();
 
-    protected abstract void savePrevious(List<WrappedFigure> figures);
-
 }

@@ -40,7 +40,6 @@ public class WidthAction extends CustomAction{
         }
     }
 
-    @Override
     protected void savePrevious(List<WrappedFigure> figures) {
         for(WrappedFigure figure : figures){
             before.add(new EdgeData(figure.getId(), figure.getEdgeWidth()));

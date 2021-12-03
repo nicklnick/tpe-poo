@@ -1,6 +1,7 @@
 package frontend.actions;
 
 import backend.CanvasState;
+import frontend.data.PositionData;
 import frontend.wrappers.WrappedFigure;
 
 import java.util.*;
@@ -19,7 +20,7 @@ public abstract class SendAction extends CustomAction {
             int i = 0;
             for(WrappedFigure figure : state.figures()) {
                 if(figure == selectedFigure) {
-                    before.add(new PositionData(selectedFigure, i);
+                    before.add(new PositionData(selectedFigure, i));
                 }
                 i++;
             }
