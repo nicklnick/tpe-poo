@@ -280,11 +280,13 @@ public class PaintPane extends BorderPane {
 
 		deleteButton.setOnAction(event -> {
 			if( !selectedFigures.isEmpty()){
+				CustomAction action = new DeleteAction(canvasState, selectedFigures);
+				manageStacks(action);
+
 				canvasState.figures().removeAll(selectedFigures);
 				redrawCanvas();
 
-				CustomAction action = new DeleteAction(canvasState, selectedFigures);
-				manageStacks(action);
+
 			}
 		});
 
@@ -301,13 +303,14 @@ public class PaintPane extends BorderPane {
 		});
 
 		redoButton.setOnAction(event ->{
-			if( undoState ){
+			if( !redoStack.isEmpty() ){
 				CustomAction action = redoStack.pop();
 				undoStack.push(action);
 				action.redo();
 				redrawCanvas();
 			}
 			else{
+
 				System.out.println("nothing to redo");
 			}
 		});
