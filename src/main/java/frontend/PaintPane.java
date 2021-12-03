@@ -2,8 +2,7 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
-import frontend.actions.CreateAction;
-import frontend.actions.CustomAction;
+import frontend.actions.*;
 import frontend.wrappers.WrappedLine;
 import frontend.wrappers.WrappedOval;
 import frontend.wrappers.WrappedFigure;
@@ -66,8 +65,8 @@ public class PaintPane extends BorderPane {
 	// StatusBar
 	private StatusPane statusPane;
 
-	private Stack<CustomAction> undoStack = new Stack<>();
-	private Stack<CustomAction> redoStack = new Stack<>();
+	private final Stack<CustomAction> undoStack = new Stack<>();
+	private final Stack<CustomAction> redoStack = new Stack<>();
 	private boolean undoState = false;
 
 	private boolean selectionMode = false;
@@ -95,6 +94,13 @@ public class PaintPane extends BorderPane {
 		edgeWidth.setShowTickLabels(true);
 		edgeWidth.valueProperty().addListener(event -> {
 			if(! selectedFigures.isEmpty()){
+				CustomAction action = new WidthAction(canvasState, selectedFigures, edgeWidth.getValue());
+				undoStack.push(action);
+				if( undoState ){
+					undoState = false;
+					redoStack.clear();
+				}
+
 				for(WrappedFigure wrappedFigure : selectedFigures)
 					wrappedFigure.setEdgeWidth(edgeWidth.getValue());
 				redrawCanvas();
@@ -103,6 +109,13 @@ public class PaintPane extends BorderPane {
 
 		fillColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker1
 			if(! selectedFigures.isEmpty()){
+				CustomAction action = new ColorFillAction(canvasState, selectedFigures, fillColorPicker.getValue());
+				undoStack.push(action);
+				if( undoState ){
+					undoState = false;
+					redoStack.clear();
+				}
+
 				for(WrappedFigure wrappedFigure : selectedFigures)
 					wrappedFigure.setFillColor(fillColorPicker.getValue());
 				redrawCanvas();
@@ -110,6 +123,13 @@ public class PaintPane extends BorderPane {
 		});
 		edgeColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker2
 			if(! selectedFigures.isEmpty()){
+				CustomAction action = new ColorEdgeAction(canvasState, selectedFigures, edgeColorPicker.getValue());
+				undoStack.push(action);
+				if( undoState ){
+					undoState = false;
+					redoStack.clear();
+				}
+
 				for(WrappedFigure wrappedFigure : selectedFigures)
 					wrappedFigure.setEdgeColor(edgeColorPicker.getValue());
 				redrawCanvas();
@@ -169,13 +189,17 @@ public class PaintPane extends BorderPane {
 				else{
 					return;
 				}
-				CustomAction action = new CreateAction(canvasState, newFigure);
-				undoStack.push(action);
-				if(undoState)
-					undoState = false;
+
 			}
 			else {
 				return ;
+			}
+
+			CustomAction action = new CreateAction(canvasState, newFigure);
+			undoStack.push(action);
+			if(undoState) {
+				undoState = false;
+				redoStack.clear();
 			}
 
 			canvasState.addFigure(newFigure);
@@ -251,14 +275,32 @@ public class PaintPane extends BorderPane {
 
 		sendToBackButton.setOnAction(event -> {
 			if(!selectedFigures.isEmpty()){
+				List<WrappedFigure> aux = new ArrayList<>(canvasState.figures());
+
 				sendToBack(selectedFigures);
 				redrawCanvas();
+
+				CustomAction action = new SendAction(canvasState, aux, canvasState.figures());
+				undoStack.push(action);
+				if( undoState ){
+					undoState = false;
+					redoStack.clear();
+				}
 			}
 		});
 		sendToFrontButton.setOnAction(event -> {
 			if(!selectedFigures.isEmpty()){
+				List<WrappedFigure> aux = new ArrayList<>(canvasState.figures());
+
 				sendToFront(selectedFigures);
 				redrawCanvas();
+
+				CustomAction action = new SendAction(canvasState, aux, canvasState.figures());
+				undoStack.push(action);
+				if( undoState){
+					undoState = false;
+					redoStack.clear();
+				}
 			}
 		});
 
@@ -266,15 +308,31 @@ public class PaintPane extends BorderPane {
 			if( !selectedFigures.isEmpty()){
 				canvasState.figures().removeAll(selectedFigures);
 				redrawCanvas();
+
+				CustomAction action = new DeleteAction(canvasState, selectedFigures);
+				undoStack.push(action);
+				if (undoState){
+					undoState = false;
+					redoStack.clear();
+				}
 			}
 		});
 
 		undoButton.setOnAction(event -> {
-
+			undoState = true;
+			CustomAction action = undoStack.pop();
+			redoStack.push(action);
+			action.undo();
+			redrawCanvas();
 		});
 
 		redoButton.setOnAction(event ->{
-
+			if( undoState ){
+				CustomAction action = redoStack.pop();
+				undoStack.push(action);
+				action.redo();
+				redrawCanvas();
+			}
 		});
 	}
 
