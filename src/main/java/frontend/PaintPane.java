@@ -259,23 +259,21 @@ public class PaintPane extends BorderPane {
 
 		sendToBackButton.setOnAction(event -> {
 			if(!selectedFigures.isEmpty()){
-				List<WrappedFigure> aux = new ArrayList<>(canvasState.figures());
 
+				CustomAction action = new SendToBackAction(canvasState, selectedFigures);
 				sendToBack(selectedFigures);
 				redrawCanvas();
 
-				CustomAction action = new SendAction(canvasState, aux, canvasState.figures());
 				manageStacks(action);
 			}
 		});
 		sendToFrontButton.setOnAction(event -> {
 			if(!selectedFigures.isEmpty()){
-				List<WrappedFigure> aux = new ArrayList<>(canvasState.figures());
 
+				CustomAction action = new SendToFrontAction(canvasState, selectedFigures);
 				sendToFront(selectedFigures);
 				redrawCanvas();
 
-				CustomAction action = new SendAction(canvasState, aux, canvasState.figures());
 				manageStacks(action);
 			}
 		});
