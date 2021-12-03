@@ -11,7 +11,7 @@ public class CreateAction extends CustomAction{
 
     public CreateAction(CanvasState<WrappedFigure> state, WrappedFigure figure){
         super(state);
-        position = state.figures().indexOf(figure);
+        position = state.figures().size();
         this.figure = figure;
     }
 

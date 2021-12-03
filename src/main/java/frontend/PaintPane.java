@@ -289,11 +289,15 @@ public class PaintPane extends BorderPane {
 		});
 
 		undoButton.setOnAction(event -> {
-			undoState = true;
-			CustomAction action = undoStack.pop();
-			redoStack.push(action);
-			action.undo();
-			redrawCanvas();
+			if(undoStack.isEmpty()){
+				System.out.println("empty stack");
+			}else {
+				undoState = true;
+				CustomAction action = undoStack.pop();
+				redoStack.push(action);
+				action.undo();
+				redrawCanvas();
+			}
 		});
 
 		redoButton.setOnAction(event ->{
@@ -302,6 +306,9 @@ public class PaintPane extends BorderPane {
 				undoStack.push(action);
 				action.redo();
 				redrawCanvas();
+			}
+			else{
+				System.out.println("nothing to redo");
 			}
 		});
 	}
