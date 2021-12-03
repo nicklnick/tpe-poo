@@ -18,7 +18,7 @@ public class ColorFillAction extends CustomAction{
         savePrevious(figures);
     }
 
-    private void savePrevious(List<WrappedFigure> figures){
+    protected void savePrevious(List<WrappedFigure> figures){
         for(WrappedFigure figure : figures){
             before.add(new ColorData(figure.getId() , figure.getFillColor() ));
         }
