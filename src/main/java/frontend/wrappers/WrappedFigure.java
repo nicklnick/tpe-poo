@@ -8,6 +8,10 @@ public abstract class WrappedFigure implements Drawable{
     protected GraphicsContext gc;
     protected Figure fig;
 
+    private static final int INIT_ID = 1;
+    private static int currentId = INIT_ID;
+
+    private int id;
     private Color edgeColor;
     private Color fillColor;
     private double edgeWidth;
@@ -18,6 +22,11 @@ public abstract class WrappedFigure implements Drawable{
         this.edgeWidth = edgeWidth;
         this.edgeColor = edgeColor;
         this.fillColor = fillColor;
+        id = currentId++;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setEdgeColor(Color edgeColor) {
