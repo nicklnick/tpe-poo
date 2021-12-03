@@ -12,7 +12,7 @@ public class ColorFillAction extends CustomAction{
     private List<ColorData> before = new LinkedList<>();
     private Color after;
 
-    public ColorFillAction(CanvasState state, List<WrappedFigure> figures, Color after){
+    public ColorFillAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, Color after){
         super(state);
         this.after = after;
         savePrevious(figures);

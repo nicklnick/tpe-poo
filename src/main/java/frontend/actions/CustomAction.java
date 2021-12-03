@@ -9,9 +9,9 @@ import java.util.List;
 
 public abstract class CustomAction {
     private List<WrappedFigure> actions = new LinkedList<>();
-    protected CanvasState state;
+    protected CanvasState<WrappedFigure> state;
 
-    public CustomAction(CanvasState state){
+    public CustomAction(CanvasState<WrappedFigure> state){
         this.state = state;
     }
 

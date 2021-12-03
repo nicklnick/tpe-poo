@@ -12,7 +12,7 @@ public class ColorEdgeAction extends CustomAction{
     private List<ColorData> before = new LinkedList<>();
     private Color after;
 
-    public ColorEdgeAction(CanvasState state, List<WrappedFigure> figures, Color after){
+    public ColorEdgeAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, Color after){
         super(state);
         this.after = after;
         savePrevious(figures);
