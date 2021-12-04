@@ -10,6 +10,7 @@ module frontend {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires javafx.graphics;
+    requires org.jetbrains.annotations;
 
     opens frontend to javafx.fxml;
     exports frontend;
