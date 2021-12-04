@@ -19,5 +19,4 @@ public class StatusPane extends BorderPane {
 	public void updateStatus(String text) {
 		statusLabel.setText(text);
 	}
-
 }

@@ -8,9 +8,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class RectButton extends CustomButton{
+
     public RectButton(String text){
         super(text);
     }
+
     @Override
     public WrappedFigure createFigure(Point startPoint, Point endPoint, GraphicsContext gc, Color edgeColor, Color fillColor, double edgeWidth) {
         checkPoints(startPoint, endPoint);

@@ -4,6 +4,7 @@ import backend.CanvasState;
 import frontend.data.ColorData;
 import frontend.wrappers.WrappedFigure;
 import javafx.scene.paint.Color;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class ColorFillAction extends GraphicAction {
     }
 
     @Override
-    protected void savePrevious(List<WrappedFigure> figures) {
+    protected void savePrevious(@NotNull List<WrappedFigure> figures) {
         for(WrappedFigure figure : figures) {
             before.add(new ColorData(figure.getId(), figure.getFillColor()));
         }

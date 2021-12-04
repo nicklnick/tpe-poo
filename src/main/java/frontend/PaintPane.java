@@ -7,10 +7,7 @@ import frontend.Exceptions.HistoryStackException;
 import frontend.Exceptions.WrongDirectionException;
 import frontend.actions.*;
 import frontend.buttons.*;
-import frontend.wrappers.WrappedLine;
-import frontend.wrappers.WrappedOval;
 import frontend.wrappers.WrappedFigure;
-import frontend.wrappers.WrappedRect;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -20,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -323,7 +321,7 @@ public class PaintPane extends BorderPane {
 		});
 	}
 
-	private void updateSliderAndColorPicker(WrappedFigure selectedFigure){
+	private void updateSliderAndColorPicker(@NotNull WrappedFigure selectedFigure){
 		edgeWidth.setValue(selectedFigure.getEdgeWidth());			// Update data with shapes values
 		edgeColorPicker.setValue(selectedFigure.getEdgeColor());
 		fillColorPicker.setValue(selectedFigure.getFillColor());
@@ -361,11 +359,11 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	private void checkSelection(List<WrappedFigure> selectedFigures){
+	private void checkSelection(@NotNull List<WrappedFigure> selectedFigures){
 		if(selectedFigures.isEmpty())
 			throw new NoFigureSelectedException();
 	}
-	private void checkStack(Stack<CustomAction> stack, String message){
+	private void checkStack(@NotNull Stack<CustomAction> stack, String message){
 		if(stack.isEmpty())
 			throw new HistoryStackException(message);
 	}

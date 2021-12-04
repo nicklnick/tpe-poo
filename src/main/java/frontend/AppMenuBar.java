@@ -34,5 +34,4 @@ public class AppMenuBar extends MenuBar {
         help.getItems().add(aboutMenuItem);
         getMenus().addAll(file, help);
     }
-
 }
