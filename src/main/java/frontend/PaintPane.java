@@ -3,6 +3,7 @@ package frontend;
 import backend.CanvasState;
 import backend.model.*;
 import frontend.actions.*;
+import frontend.buttons.*;
 import frontend.wrappers.WrappedLine;
 import frontend.wrappers.WrappedOval;
 import frontend.wrappers.WrappedFigure;
@@ -36,11 +37,11 @@ public class PaintPane extends BorderPane {
 
 	// Botones Barra Izquierda
 	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	private final ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-	private final ToggleButton circleButton = new ToggleButton("Círculo");
-	private final ToggleButton squareButton = new ToggleButton("Cuadrado");
-	private final ToggleButton ellipseButton = new ToggleButton("Elipse");
-	private final ToggleButton lineButton = new ToggleButton("Línea");
+	private final CustomButton rectangleButton = new RectButton("Rectángulo");
+	private final CustomButton circleButton = new CircleButton("Círculo");
+	private final CustomButton squareButton = new SqrButton("Cuadrado");
+	private final CustomButton ellipseButton = new EllipseButton("Elipse");
+	private final CustomButton lineButton = new LineButton("Línea");
 	private final Button sendToFrontButton = new Button("Al Frente");
 	private final Button sendToBackButton = new Button("Al Fondo");
 	private final Button deleteButton = new Button("Borrar");
@@ -90,40 +91,10 @@ public class PaintPane extends BorderPane {
 			button.setCursor(Cursor.HAND);
 		}
 
-		edgeWidth.setShowTickMarks(true);								// Configuracion de slider
-		edgeWidth.setShowTickLabels(true);
-		edgeWidth.setOnMouseReleased(event -> {
-			if(! selectedFigures.isEmpty()){
-				CustomAction action = new WidthAction(canvasState, selectedFigures, edgeWidth.getValue());
-				manageStacks(action);
-
-				for(WrappedFigure wrappedFigure : selectedFigures)
-					wrappedFigure.setEdgeWidth(edgeWidth.getValue());
-				redrawCanvas();
-			}
-		});
-
-		fillColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker1
-			if(! selectedFigures.isEmpty()){
-				CustomAction action = new ColorFillAction(canvasState, selectedFigures, fillColorPicker.getValue());
-				manageStacks(action);
-
-				for(WrappedFigure wrappedFigure : selectedFigures)
-					wrappedFigure.setFillColor(fillColorPicker.getValue());
-				redrawCanvas();
-			}
-		});
-		edgeColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker2
-			if(! selectedFigures.isEmpty()){
-				CustomAction action = new ColorEdgeAction(canvasState, selectedFigures, edgeColorPicker.getValue());
-				manageStacks(action);
-
-				for(WrappedFigure wrappedFigure : selectedFigures)
-					wrappedFigure.setEdgeColor(edgeColorPicker.getValue());
-				redrawCanvas();
-			}
-		});
-
+		CustomGroup customGroup = new CustomGroup();
+		CustomButton[] buttons = {rectangleButton, circleButton,
+				squareButton, ellipseButton, lineButton };
+		customGroup.addButton(buttons);
 
 		VBox buttonsBox = new VBox(10);
 
@@ -149,44 +120,24 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 
-			WrappedFigure newFigure;
-
-			if(lineButton.isSelected()) {
-				newFigure = new WrappedLine(new Line(startPoint, endPoint), gc, edgeColorPicker.getValue(), edgeWidth.getValue());
-			}
-			else if( ! (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())){
-				if(rectangleButton.isSelected()) {
-					newFigure = new WrappedRect(new Rectangle(startPoint, endPoint), gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue() ) ;
+			//! (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY();
+			if(customGroup.getSelectedButton() != null){
+				WrappedFigure newFigure = customGroup.getSelectedButton().createFigure(startPoint, endPoint, gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue() );
+				if(newFigure != null){
+					CustomAction action = new CreateAction(canvasState, newFigure);
+					manageStacks(action);
+					canvasState.addFigure(newFigure);
 				}
-				else if(circleButton.isSelected()) {
-					double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-					newFigure = new WrappedOval(new Circle(startPoint, circleRadius), gc, edgeColorPicker.getValue(),  fillColorPicker.getValue(), edgeWidth.getValue()) ;
-				} else if(squareButton.isSelected()){
-					newFigure = new WrappedRect(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc, edgeColorPicker.getValue(),  fillColorPicker.getValue(), LINE_WIDTH);
-				} else if(ellipseButton.isSelected()) {
-					newFigure = new WrappedOval(new Ellipse(startPoint, endPoint), gc, edgeColorPicker.getValue(),  fillColorPicker.getValue(), edgeWidth.getValue());
-				} else if(selectionMode){
-					Figure imaginaryBox = new Rectangle(startPoint, endPoint);
-					for(WrappedFigure wrappedFigure : canvasState.figures()) {
-						if (imaginaryBox.contains(wrappedFigure.getFigure().getFirstPoint()) && imaginaryBox.contains(wrappedFigure.getFigure().getSecondPoint())) {
-							selectedFigures.add(wrappedFigure);
-						}
+			}
+			else if(selectionMode) {
+				Figure imaginaryBox = new Rectangle(startPoint, endPoint);
+				for (WrappedFigure wrappedFigure : canvasState.figures()) {
+					if (imaginaryBox.contains(wrappedFigure.getFigure().getFirstPoint()) && imaginaryBox.contains(wrappedFigure.getFigure().getSecondPoint())) {
+						selectedFigures.add(wrappedFigure);
 					}
-					return;
 				}
-				else{
-					return;
-				}
-
-			}
-			else {
-				return ;
 			}
 
-			CustomAction action = new CreateAction(canvasState, newFigure);
-			manageStacks(action);
-
-			canvasState.addFigure(newFigure);
 			startPoint = null;
 			redrawCanvas();
 		});
@@ -317,6 +268,39 @@ public class PaintPane extends BorderPane {
 			}
 			else{
 				statusPane.updateStatus("Nada para rehacer!");
+			}
+		});
+		edgeWidth.setShowTickMarks(true);								// Configuracion de slider
+		edgeWidth.setShowTickLabels(true);
+		edgeWidth.setOnMouseReleased(event -> {
+			if(! selectedFigures.isEmpty()){
+				CustomAction action = new WidthAction(canvasState, selectedFigures, edgeWidth.getValue());
+				manageStacks(action);
+
+				for(WrappedFigure wrappedFigure : selectedFigures)
+					wrappedFigure.setEdgeWidth(edgeWidth.getValue());
+				redrawCanvas();
+			}
+		});
+
+		fillColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker1
+			if(! selectedFigures.isEmpty()){
+				CustomAction action = new ColorFillAction(canvasState, selectedFigures, fillColorPicker.getValue());
+				manageStacks(action);
+
+				for(WrappedFigure wrappedFigure : selectedFigures)
+					wrappedFigure.setFillColor(fillColorPicker.getValue());
+				redrawCanvas();
+			}
+		});
+		edgeColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker2
+			if(! selectedFigures.isEmpty()){
+				CustomAction action = new ColorEdgeAction(canvasState, selectedFigures, edgeColorPicker.getValue());
+				manageStacks(action);
+
+				for(WrappedFigure wrappedFigure : selectedFigures)
+					wrappedFigure.setEdgeColor(edgeColorPicker.getValue());
+				redrawCanvas();
 			}
 		});
 	}

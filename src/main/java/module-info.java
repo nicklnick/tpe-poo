@@ -14,4 +14,6 @@ module frontend {
 
     opens frontend to javafx.fxml;
     exports frontend;
+    exports frontend.buttons;
+    opens frontend.buttons to javafx.fxml;
 }
