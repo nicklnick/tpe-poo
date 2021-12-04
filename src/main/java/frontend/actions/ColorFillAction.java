@@ -6,12 +6,10 @@ import frontend.wrappers.WrappedFigure;
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
 import java.util.List;
 
-public class ColorFillAction extends GraphicAction {
+public class ColorFillAction extends GraphicAction<ColorData> {
 
-    private List<ColorData> before = new LinkedList<>();
     private Color after;
 
     public ColorFillAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, Color after) {

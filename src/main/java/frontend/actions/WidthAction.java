@@ -3,13 +3,12 @@ package frontend.actions;
 import backend.CanvasState;
 import frontend.data.EdgeData;
 import frontend.wrappers.WrappedFigure;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
 import java.util.List;
 
-public class WidthAction extends GraphicAction {
+public class WidthAction extends GraphicAction<EdgeData> {
 
-    private List<EdgeData> before = new LinkedList<>();
     private double after;
 
     public WidthAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, double after) {
@@ -18,7 +17,7 @@ public class WidthAction extends GraphicAction {
     }
 
     @Override
-    protected void savePrevious(List<WrappedFigure> figures) {
+    protected void savePrevious(@NotNull List<WrappedFigure> figures) {
         for(WrappedFigure figure : figures) {
             before.add(new EdgeData(figure.getId(), figure.getEdgeWidth()));
         }

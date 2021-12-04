@@ -5,12 +5,10 @@ import frontend.data.ColorData;
 import frontend.wrappers.WrappedFigure;
 import javafx.scene.paint.Color;
 
-import java.util.LinkedList;
 import java.util.List;
 
-public class ColorEdgeAction extends GraphicAction {
+public class ColorEdgeAction extends GraphicAction<ColorData> {
 
-    private List<ColorData> before = new LinkedList<>();
     private Color after;
 
     public ColorEdgeAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, Color after) {

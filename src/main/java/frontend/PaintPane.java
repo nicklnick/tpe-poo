@@ -321,17 +321,23 @@ public class PaintPane extends BorderPane {
 		});
 	}
 
+
+	/* PRIVATE METHODS */
+
+	/* Update data with shapes values */
 	private void updateSliderAndColorPicker(@NotNull WrappedFigure selectedFigure){
-		edgeWidth.setValue(selectedFigure.getEdgeWidth());			// Update data with shapes values
+		edgeWidth.setValue(selectedFigure.getEdgeWidth());
 		edgeColorPicker.setValue(selectedFigure.getEdgeColor());
 		fillColorPicker.setValue(selectedFigure.getFillColor());
 	}
 
+	/* Sends selected figures to front */
 	private void sendToFront(List<WrappedFigure> selectedFigures) {
 		canvasState.figures().removeAll(selectedFigures);
 		canvasState.figures().addAll(selectedFigures);
 	}
 
+	/* Sends selected figures to back */
 	private void sendToBack(List<WrappedFigure> selectedFigures) {
 		canvasState.figures().removeAll(selectedFigures);
 		canvasState.figures().addAll(0, selectedFigures);
