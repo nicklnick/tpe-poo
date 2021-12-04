@@ -13,6 +13,7 @@ public class RectButton extends CustomButton{
     }
     @Override
     public WrappedFigure createFigure(Point startPoint, Point endPoint, GraphicsContext gc, Color edgeColor, Color fillColor, double edgeWidth) {
+        checkPoints(startPoint, endPoint);
         return new WrappedRect(new Rectangle(startPoint, endPoint), gc, edgeColor, fillColor, edgeWidth );
     }
 }

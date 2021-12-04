@@ -13,6 +13,7 @@ public class SqrButton extends CustomButton{
     }
     @Override
     public WrappedFigure createFigure(Point startPoint, Point endPoint, GraphicsContext gc, Color edgeColor, Color fillColor, double edgeWidth) {
+        checkPoints(startPoint, endPoint);
         return new WrappedRect(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc, edgeColor, fillColor, edgeWidth );
     }
 }

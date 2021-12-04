@@ -13,7 +13,7 @@ public class CircleButton extends CustomButton{
     }
     @Override
     public WrappedFigure createFigure(Point startPoint, Point endPoint, GraphicsContext gc, Color edgeColor, Color fillColor, double edgeWidth) {
-        double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
+        double circleRadius = startPoint.distanceTo(endPoint);
         return new WrappedOval(new Circle(startPoint, circleRadius), gc, edgeColor, fillColor, edgeWidth );
     }
 }

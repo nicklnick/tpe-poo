@@ -14,6 +14,7 @@ public class EllipseButton extends CustomButton{
     }
     @Override
     public WrappedFigure createFigure(Point startPoint, Point endPoint, GraphicsContext gc, Color edgeColor, Color fillColor, double edgeWidth) {
+        checkPoints(startPoint, endPoint);
         return new WrappedOval(new Ellipse(startPoint, endPoint), gc, edgeColor, fillColor, edgeWidth );
     }
 }

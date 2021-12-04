@@ -4,6 +4,7 @@ import backend.CanvasState;
 import backend.model.*;
 import frontend.Exceptions.NoFigureSelectedException;
 import frontend.Exceptions.HistoryStackException;
+import frontend.Exceptions.WrongDirectionException;
 import frontend.actions.*;
 import frontend.buttons.*;
 import frontend.wrappers.WrappedLine;
@@ -122,16 +123,19 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 
-			//! (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY();
-			if(customGroup.getSelectedButton() != null){
-				WrappedFigure newFigure = customGroup.getSelectedButton().createFigure(startPoint, endPoint, gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue() );
-				if(newFigure != null){
-					CustomAction action = new CreateAction(canvasState, newFigure);
-					manageStacks(action);
-					canvasState.addFigure(newFigure);
+			try {
+				if (customGroup.getSelectedButton() != null) {
+					WrappedFigure newFigure = customGroup.getSelectedButton().createFigure(startPoint, endPoint, gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue());
+					if (newFigure != null) {
+						CustomAction action = new CreateAction(canvasState, newFigure);
+						manageStacks(action);
+						canvasState.addFigure(newFigure);
+					}
 				}
+			}catch(WrongDirectionException ex){
+				statusPane.updateStatus(ex.getMessage());
 			}
-			else if(selectionMode) {
+			if (selectionMode) {
 				Figure imaginaryBox = new Rectangle(startPoint, endPoint);
 				for (WrappedFigure wrappedFigure : canvasState.figures()) {
 					if (imaginaryBox.contains(wrappedFigure.getFigure().getFirstPoint()) && imaginaryBox.contains(wrappedFigure.getFigure().getSecondPoint())) {
