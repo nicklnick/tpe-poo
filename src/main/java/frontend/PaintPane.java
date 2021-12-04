@@ -237,7 +237,8 @@ public class PaintPane extends BorderPane {
 				statusPane.updateStatus(label.toString());
 			} else {														// Se hace click fuera de cualquier figura
 				selectedFigures.clear();
-				statusPane.updateStatus("Ninguna figura encontrada");
+				if(selectionButton.isSelected())
+					statusPane.updateStatus("Ninguna figura encontrada");
 			}
 			selectionMode = false;
 			redrawCanvas();
@@ -265,6 +266,8 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 
 				manageStacks(action);
+			}else{
+				noFigureSelectedMessage();
 			}
 		});
 		sendToFrontButton.setOnAction(event -> {
@@ -275,6 +278,8 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 
 				manageStacks(action);
+			}else{
+				noFigureSelectedMessage();
 			}
 		});
 
@@ -284,15 +289,16 @@ public class PaintPane extends BorderPane {
 				manageStacks(action);
 
 				canvasState.figures().removeAll(selectedFigures);
+				selectedFigures.clear();
 				redrawCanvas();
-
-
+			}else{
+				noFigureSelectedMessage();
 			}
 		});
 
 		undoButton.setOnAction(event -> {
 			if(undoStack.isEmpty()){
-				statusPane.updateStatus("Nothing to undo!");
+				statusPane.updateStatus("Nada para deshacer!");
 			}else {
 				undoState = true;
 				CustomAction action = undoStack.pop();
@@ -310,7 +316,7 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}
 			else{
-				statusPane.updateStatus("Nothing to redo!");
+				statusPane.updateStatus("Nada para rehacer!");
 			}
 		});
 	}
@@ -351,5 +357,9 @@ public class PaintPane extends BorderPane {
 			undoState = false;
 			redoStack.clear();
 		}
+	}
+
+	private void noFigureSelectedMessage(){
+		statusPane.updateStatus("Ninguna figura seleccionada");
 	}
 }
