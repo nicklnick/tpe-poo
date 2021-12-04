@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class WrappedOval extends WrappedFigure {
+
     public WrappedOval(Figure fig, GraphicsContext gc, Color edgeColor, Color fillColor, double edgeWidth) {
         super(fig, gc, edgeColor, fillColor, edgeWidth);
     }
