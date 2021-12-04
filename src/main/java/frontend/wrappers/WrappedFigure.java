@@ -5,11 +5,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public abstract class WrappedFigure implements Drawable{
-    protected GraphicsContext gc;
-    protected Figure fig;
 
     private static final int INIT_ID = 1;
     private static int currentId = INIT_ID;
+
+    protected GraphicsContext gc;
+    protected Figure fig;
 
     private int id;
     private Color edgeColor;
@@ -25,20 +26,17 @@ public abstract class WrappedFigure implements Drawable{
         id = currentId++;
     }
 
+    public abstract void draw();
+
+    @Override
+    public String toString(){
+        return fig.toString();
+    }
+
+
+    /* GETTERS */
     public int getId() {
         return id;
-    }
-
-    public void setEdgeColor(Color edgeColor) {
-        this.edgeColor = edgeColor;
-    }
-
-    public void setEdgeWidth(double edgeWidth) {
-        this.edgeWidth = edgeWidth;
-    }
-
-    public void setFillColor(Color fillColor) {
-        this.fillColor = fillColor;
     }
 
     public Color getEdgeColor() {
@@ -57,11 +55,18 @@ public abstract class WrappedFigure implements Drawable{
         return fig;
     }
 
-    public abstract void draw();
 
-    @Override
-    public String toString(){
-        return fig.toString();
+    /* SETTERS */
+    public void setEdgeColor(Color edgeColor) {
+        this.edgeColor = edgeColor;
+    }
+
+    public void setEdgeWidth(double edgeWidth) {
+        this.edgeWidth = edgeWidth;
+    }
+
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
     }
 }
 
