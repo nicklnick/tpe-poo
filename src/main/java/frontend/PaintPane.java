@@ -292,7 +292,7 @@ public class PaintPane extends BorderPane {
 
 		undoButton.setOnAction(event -> {
 			if(undoStack.isEmpty()){
-				System.out.println("empty stack");
+				statusPane.updateStatus("Nothing to undo!");
 			}else {
 				undoState = true;
 				CustomAction action = undoStack.pop();
@@ -310,8 +310,7 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}
 			else{
-
-				System.out.println("nothing to redo");
+				statusPane.updateStatus("Nothing to redo!");
 			}
 		});
 	}
