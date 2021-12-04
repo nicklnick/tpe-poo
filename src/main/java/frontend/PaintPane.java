@@ -157,9 +157,10 @@ public class PaintPane extends BorderPane {
 				newFigure = new WrappedLine(new Line(startPoint, endPoint), gc, edgeColorPicker.getValue(), edgeWidth.getValue());
 			}
 			else if(circleButton.isSelected()) {
-				double circleRadius = Math.sqrt(Math.pow(endPoint.getX() - startPoint.getX(),2)+ Math.pow(endPoint.getY() - startPoint.getY(),2));
+				double circleRadius = endPoint.distanceTo(startPoint);
 				newFigure = new WrappedOval(new Circle(startPoint, circleRadius), gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue());
 			}
+
 			else if( ! (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())){
 				if(rectangleButton.isSelected()) {
 					newFigure = new WrappedRect(new Rectangle(startPoint, endPoint), gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue() ) ;
