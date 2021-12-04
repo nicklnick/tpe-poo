@@ -15,17 +15,24 @@ public class Circle extends Figure {
         return String.format("Círculo [Centro: %s, Radio: %.2f]", centerPoint, radius);
     }
 
+    @Override
+    public boolean contains(Point point) {
+        return centerPoint.distanceTo(point) < radius;
+    }
+
+    @Override
+    public void move(double diffX, double diffY) {
+        centerPoint.move(diffX, diffY);
+    }
+
+
+    /* GETTERS */
     public Point getCenterPoint() {
         return centerPoint;
     }
 
     public double getRadius() {
         return radius;
-    }
-
-    @Override
-    public boolean contains(Point point) {
-        return centerPoint.distanceTo(point) < radius;
     }
 
     @Override
@@ -55,13 +62,6 @@ public class Circle extends Figure {
 
     @Override
     public double getWidth() {
-        return getHeight();        //!!!!!!!!!!!!!!!!!!
+        return getHeight();
     }
-
-    @Override
-    public void move(double x, double y) {
-        centerPoint.move(x,y);
-    }
-
-
 }

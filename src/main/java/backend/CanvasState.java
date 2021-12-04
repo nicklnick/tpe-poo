@@ -1,11 +1,11 @@
 package backend;
 
-import backend.model.Figure;
-import frontend.wrappers.WrappedFigure;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+**  Encargado de mantener el estado del Canvas
+ */
 public class CanvasState<V> {
 
     private final List<V> list = new ArrayList<>();
@@ -17,14 +17,4 @@ public class CanvasState<V> {
     public List<V> figures() {
         return list;
     }
-
-    public void addFigures(List<V> figures) {
-        list.addAll(figures);
-    }
-
-    public void clearFigures() {
-        list.clear();
-    }
-
-
 }

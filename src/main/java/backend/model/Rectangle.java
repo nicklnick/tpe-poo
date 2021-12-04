@@ -1,9 +1,6 @@
 package backend.model;
 
-import java.util.Objects;
-
 public class Rectangle extends Figure {
-
 
     private final Point topLeft, bottomRight;
 
@@ -12,29 +9,31 @@ public class Rectangle extends Figure {
         this.bottomRight = bottomRight;
     }
 
-    public Point getTopLeft() {
-        return topLeft;
-    }
-
-    public Point getBottomRight() {
-        return bottomRight;
-    }
-
     @Override
     public String toString() {
         return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
     }
 
     @Override
-    public void move(double x, double y) {
-        topLeft.move(x,y);
-        bottomRight.move(x,y);
+    public void move(double diffX, double diffY) {
+        topLeft.move(diffX, diffY);
+        bottomRight.move(diffX, diffY);
     }
 
     @Override
     public boolean contains(Point point) {
-        return point.getX() > topLeft.getX() && point.getX() < bottomRight.getX() &&
-                point.getY() > topLeft.getY() && point.getY() < bottomRight.getY();
+        return point.getX() > topLeft.getX() && point.getX() < bottomRight.getX()
+                && point.getY() > topLeft.getY() && point.getY() < bottomRight.getY();
+    }
+
+
+    /* GETTERS */
+    public Point getTopLeft() {
+        return topLeft;
+    }
+
+    public Point getBottomRight() {
+        return bottomRight;
     }
 
     @Override
@@ -45,20 +44,6 @@ public class Rectangle extends Figure {
     @Override
     public Point getSecondPoint() {
         return getBottomRight();
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Rectangle rectangle = (Rectangle) o;
-        return Objects.equals(topLeft, rectangle.topLeft) && Objects.equals(bottomRight, rectangle.bottomRight);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(topLeft, bottomRight);
     }
 
     @Override
