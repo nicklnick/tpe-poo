@@ -2,6 +2,8 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
+import frontend.Exceptions.NoFigureSelectedException;
+import frontend.Exceptions.HistoryStackException;
 import frontend.actions.*;
 import frontend.wrappers.WrappedLine;
 import frontend.wrappers.WrappedOval;
@@ -259,64 +261,73 @@ public class PaintPane extends BorderPane {
 		});
 
 		sendToBackButton.setOnAction(event -> {
-			if(!selectedFigures.isEmpty()){
+			try {
+				checkSelection(selectedFigures);
 
 				CustomAction action = new SendToBackAction(canvasState, selectedFigures);
 				sendToBack(selectedFigures);
 				redrawCanvas();
 
 				manageStacks(action);
-			}else{
-				noFigureSelectedMessage();
+
+			} catch(NoFigureSelectedException ex){
+				statusPane.updateStatus(ex.getMessage());
 			}
 		});
 		sendToFrontButton.setOnAction(event -> {
-			if(!selectedFigures.isEmpty()){
+			try {
+				checkSelection(selectedFigures);
 
 				CustomAction action = new SendToFrontAction(canvasState, selectedFigures);
 				sendToFront(selectedFigures);
 				redrawCanvas();
 
 				manageStacks(action);
-			}else{
-				noFigureSelectedMessage();
+
+			} catch(NoFigureSelectedException ex){
+				statusPane.updateStatus(ex.getMessage());
 			}
 		});
 
 		deleteButton.setOnAction(event -> {
-			if( !selectedFigures.isEmpty()){
+			try {
+				checkSelection(selectedFigures);
+
 				CustomAction action = new DeleteAction(canvasState, selectedFigures);
 				manageStacks(action);
 
 				canvasState.figures().removeAll(selectedFigures);
 				selectedFigures.clear();
 				redrawCanvas();
-			}else{
-				noFigureSelectedMessage();
+			}catch(NoFigureSelectedException ex){
+				statusPane.updateStatus(ex.getMessage());
 			}
+
 		});
 
 		undoButton.setOnAction(event -> {
-			if(undoStack.isEmpty()){
-				statusPane.updateStatus("Nada para deshacer!");
-			}else {
+			try {
+				checkStack(undoStack, "deshacer");
+
 				undoState = true;
 				CustomAction action = undoStack.pop();
 				redoStack.push(action);
 				action.undo();
 				redrawCanvas();
+			}catch(HistoryStackException ex){
+				statusPane.updateStatus(ex.getMessage());
 			}
 		});
 
 		redoButton.setOnAction(event ->{
-			if( !redoStack.isEmpty() ){
+			try{
+				checkStack(redoStack, "rehacer");
 				CustomAction action = redoStack.pop();
 				undoStack.push(action);
 				action.redo();
 				redrawCanvas();
-			}
-			else{
-				statusPane.updateStatus("Nada para rehacer!");
+			}catch(HistoryStackException ex){
+				statusPane.updateStatus(ex.getMessage());
 			}
 		});
 	}
@@ -359,7 +370,12 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	private void noFigureSelectedMessage(){
-		statusPane.updateStatus("Ninguna figura seleccionada");
+	private void checkSelection(List<WrappedFigure> selectedFigures){
+		if(selectedFigures.isEmpty())
+			throw new NoFigureSelectedException();
+	}
+	private void checkStack(Stack<CustomAction> stack, String message){
+		if(stack.isEmpty())
+			throw new HistoryStackException(message);
 	}
 }
