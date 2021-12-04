@@ -123,9 +123,12 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 
+
+
 			try {
-				if (customGroup.getSelectedButton() != null) {
-					WrappedFigure newFigure = customGroup.getSelectedButton().createFigure(startPoint, endPoint, gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue());
+				CustomButton selectedButton = customGroup.getSelectedButton();
+				if (selectedButton != null) {
+					WrappedFigure newFigure = selectedButton.createFigure(startPoint, endPoint, gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue());
 					if (newFigure != null) {
 						CustomAction action = new CreateAction(canvasState, newFigure);
 						manageStacks(action);
