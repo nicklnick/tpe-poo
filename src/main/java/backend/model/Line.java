@@ -1,5 +1,7 @@
 package backend.model;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Line extends Figure{
 
     private static final double EPSILON = 10;
@@ -12,7 +14,7 @@ public class Line extends Figure{
 
     @Override
     public String toString(){
-        return String.format("Linea [ %s , %s ]",firstPoint, secondPoint);
+        return String.format("Linea [ %s , %s ]", firstPoint, secondPoint);
     }
 
     @Override
@@ -23,25 +25,25 @@ public class Line extends Figure{
 
     @Override
     public boolean contains(Point point) {
-        if( Math.abs(firstPoint.getX()- secondPoint.getX()) < EPSILON){
+        if( Math.abs(firstPoint.getX() - secondPoint.getX()) < EPSILON ) {
             return Math.abs(firstPoint.getX() - point.getX()) < EPSILON
                     && ( (firstPoint.getY() >= point.getY() && secondPoint.getY() <= point.getY())
                     || (firstPoint.getY() <= point.getY() && secondPoint.getY() >= point.getY()) );
         }
-        return betweenPointsX(point) && Math.abs(point.getY() - (gradient()* point.getX() + calcB())) < EPSILON;
+        return betweenPointsX(point) && Math.abs(point.getY() - (gradient() * point.getX() + calcB())) < EPSILON;
     }
 
 
     /* PRIVATE METHODS */
     private double gradient(){
-        return (firstPoint.getY() - secondPoint.getY()) / (firstPoint.getX()- secondPoint.getX());
+        return (firstPoint.getY() - secondPoint.getY()) / (firstPoint.getX() - secondPoint.getX());
     }
 
     private double calcB(){
-        return firstPoint.getY() - gradient()* firstPoint.getX();
+        return firstPoint.getY() - gradient() * firstPoint.getX();
     }
 
-    private boolean betweenPointsX(Point point){
+    private boolean betweenPointsX(@NotNull Point point){
         return (point.getX() >= firstPoint.getX() && point.getX() <= secondPoint.getX())
                 || (point.getX() <= firstPoint.getX() && point.getX() >= secondPoint.getX());
     }

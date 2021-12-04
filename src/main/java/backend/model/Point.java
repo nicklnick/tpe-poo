@@ -1,5 +1,7 @@
 package backend.model;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Point implements Movable{
 
     private double x, y;
@@ -20,7 +22,7 @@ public class Point implements Movable{
         this.y += diffY;
     }
 
-    public double distanceTo(Point other){
+    public double distanceTo(@NotNull Point other){
         return Math.sqrt(Math.pow(Math.abs(x - other.getX()),2) + Math.pow(Math.abs(y - other.getY()),2));
     }
 
