@@ -156,14 +156,15 @@ public class PaintPane extends BorderPane {
 			if(lineButton.isSelected()) {
 				newFigure = new WrappedLine(new Line(startPoint, endPoint), gc, edgeColorPicker.getValue(), edgeWidth.getValue());
 			}
+			else if(circleButton.isSelected()) {
+				double circleRadius = Math.sqrt(Math.pow(endPoint.getX() - startPoint.getX(),2)+ Math.pow(endPoint.getY() - startPoint.getY(),2));
+				newFigure = new WrappedOval(new Circle(startPoint, circleRadius), gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue());
+			}
 			else if( ! (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())){
 				if(rectangleButton.isSelected()) {
 					newFigure = new WrappedRect(new Rectangle(startPoint, endPoint), gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue() ) ;
 				}
-				else if(circleButton.isSelected()) {
-					double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-					newFigure = new WrappedOval(new Circle(startPoint, circleRadius), gc, edgeColorPicker.getValue(),  fillColorPicker.getValue(), edgeWidth.getValue()) ;
-				} else if(squareButton.isSelected()){
+				else if(squareButton.isSelected()){
 					newFigure = new WrappedRect(new Square(startPoint, endPoint.getX() - startPoint.getX()), gc, edgeColorPicker.getValue(),  fillColorPicker.getValue(), LINE_WIDTH);
 				} else if(ellipseButton.isSelected()) {
 					newFigure = new WrappedOval(new Ellipse(startPoint, endPoint), gc, edgeColorPicker.getValue(),  fillColorPicker.getValue(), edgeWidth.getValue());
