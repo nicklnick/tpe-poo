@@ -92,7 +92,7 @@ public class PaintPane extends BorderPane {
 
 		edgeWidth.setShowTickMarks(true);								// Configuracion de slider
 		edgeWidth.setShowTickLabels(true);
-		edgeWidth.valueProperty().addListener(event -> {
+		edgeWidth.setOnMouseReleased(event -> {
 			if(! selectedFigures.isEmpty()){
 				CustomAction action = new WidthAction(canvasState, selectedFigures, edgeWidth.getValue());
 				manageStacks(action);
