@@ -8,27 +8,28 @@ import javafx.scene.paint.Color;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ColorFillAction extends CustomAction{
+public class ColorFillAction extends GraphicAction {
+
     private List<ColorData> before = new LinkedList<>();
     private Color after;
 
-    public ColorFillAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, Color after){
-        super(state);
+    public ColorFillAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, Color after) {
+        super(state, figures);
         this.after = after;
-        savePrevious(figures);
     }
 
-    protected void savePrevious(List<WrappedFigure> figures){
-        for(WrappedFigure figure : figures){
-            before.add(new ColorData(figure.getId() , figure.getFillColor() ));
+    @Override
+    protected void savePrevious(List<WrappedFigure> figures) {
+        for(WrappedFigure figure : figures) {
+            before.add(new ColorData(figure.getId(), figure.getFillColor()));
         }
     }
 
     @Override
     public void undo() {
-        for(WrappedFigure figure : state.figures()){
-            for(ColorData data : before){
-                if(figure.getId() == data.getId()){
+        for(WrappedFigure figure : state.figures()) {
+            for(ColorData data : before) {
+                if(figure.getId() == data.getId()) {
                     figure.setFillColor(data.getColor());
                 }
             }
@@ -37,13 +38,12 @@ public class ColorFillAction extends CustomAction{
 
     @Override
     public void redo() {
-        for(WrappedFigure figure : state.figures()){
+        for(WrappedFigure figure : state.figures()) {
             for(ColorData data : before){
-                if(figure.getId() == data.getId()){
+                if(figure.getId() == data.getId()) {
                     figure.setFillColor(after);
                 }
             }
         }
     }
-
 }

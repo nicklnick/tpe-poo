@@ -9,10 +9,10 @@ import java.util.List;
 public class SendToFrontAction extends SendAction {
     public SendToFrontAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures) {
         super(state, figures);
-        saveAfter();
     }
 
-    private void saveAfter() {
+    @Override
+    protected void saveAfter() {
         int size = state.figures().size() - 1;
         int newPosition = size - (before.size() - 1);
         for(PositionData position : before) {

@@ -7,12 +7,14 @@ import frontend.wrappers.WrappedFigure;
 import java.util.*;
 
 public class DeleteAction extends CustomAction{
+
     private SortedSet<PositionData> before = new TreeSet<>();
 
     public DeleteAction(CanvasState<WrappedFigure> state, List<WrappedFigure> selectedFigures){
         super(state);
         savePrevious(selectedFigures);
     }
+
     protected void savePrevious(List<WrappedFigure> figures){
         ListIterator<WrappedFigure> iterator = state.figures().listIterator();
         while(iterator.hasNext()){
