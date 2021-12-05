@@ -119,9 +119,6 @@ public class PaintPane extends BorderPane {
 			if(startPoint == null) {
 				return ;
 			}
-
-
-
 			try {
 				CustomButton selectedButton = customGroup.getSelectedButton();
 				if (selectedButton != null) {
@@ -169,7 +166,7 @@ public class PaintPane extends BorderPane {
 			boolean found = false;
 			StringBuilder label = new StringBuilder("Se seleccionó: ");
 
-			if(selectionMode && !selectedFigures.isEmpty()) {				// Caso en cual se esta usando el drag para seleccionar
+			if(!selectedFigures.isEmpty()) {				// Caso en cual se esta usando el drag para seleccionar
 				for(WrappedFigure figure : selectedFigures){
 					label.append(figure.toString());
 				}
