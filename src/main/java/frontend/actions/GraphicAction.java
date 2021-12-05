@@ -6,6 +6,10 @@ import frontend.wrappers.WrappedFigure;
 import java.util.LinkedList;
 import java.util.List;
 
+/*
+ * clase abstracta para ahorrar código con las acciones que correspondan
+ * a variables representadas gráficamente.
+ */
 public abstract class GraphicAction<T> extends CustomAction {
 
     protected final List<T> before = new LinkedList<>();

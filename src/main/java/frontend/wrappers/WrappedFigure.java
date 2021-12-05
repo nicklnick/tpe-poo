@@ -4,6 +4,11 @@ import backend.model.Figure;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/*
+ * Clases que modelan a las formas básicas para ser dibujadas.
+ * Contiene variables de cualidades visuales de las figuras y
+ * el gc para que este lo pueda dibujar.
+ */
 public abstract class WrappedFigure implements Drawable{
 
     private static final int INIT_ID = 1;
