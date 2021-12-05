@@ -243,6 +243,9 @@ public class PaintPane extends BorderPane {
 		}
 		redrawCanvas();
 	}
+	/*
+	 * Punto 4 del enunciado
+	 */
 
 	private void sendToBackButtonAction(){
 		try {
@@ -273,6 +276,9 @@ public class PaintPane extends BorderPane {
 			statusPane.updateStatus(ex.getMessage());
 		}
 	}
+	/*
+	 * Punto 2 del enunciado
+	 */
 
 	private void edgeColorAction(){
 		if(! selectedFigures.isEmpty()){
@@ -307,6 +313,10 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
+	/*
+	 * Punto 3 del enunciado.
+	 */
+
 	private void deleteButtonAction(){
 		try {
 			checkSelection(selectedFigures);
@@ -321,6 +331,9 @@ public class PaintPane extends BorderPane {
 			statusPane.updateStatus(ex.getMessage());
 		}
 	}
+	/*
+	 * Punto 5 del enunciado.
+	 */
 
 	private void redoButtonAction(){
 		try{
@@ -380,6 +393,9 @@ public class PaintPane extends BorderPane {
 			wrappedFigure.draw();
 		}
 	}
+	/*
+	 * Si se deshicieron acciones, cuando se crea una nueva accion mientras estas no se rehicieron se eliminan.
+	 */
 
 	private void manageStacks(CustomAction action){
 		undoStack.push(action);
@@ -388,6 +404,10 @@ public class PaintPane extends BorderPane {
 			redoStack.clear();
 		}
 	}
+
+	/*
+	 * manejo de errores para rehacer y deshacer y el modificado de figuras en paintpane
+	 */
 
 	private void checkSelection(@NotNull List<WrappedFigure> selectedFigures){
 		if(selectedFigures.isEmpty())
