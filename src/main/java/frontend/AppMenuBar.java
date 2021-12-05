@@ -4,6 +4,10 @@ import javafx.scene.control.*;
 
 import java.util.Optional;
 
+/*
+ * clase para modelar la barra de opciones
+ * de la parte superior de la aplicación.
+ */
 public class AppMenuBar extends MenuBar {
 
     public AppMenuBar() {

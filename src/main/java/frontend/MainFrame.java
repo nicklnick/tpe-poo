@@ -4,6 +4,10 @@ import backend.CanvasState;
 import frontend.wrappers.WrappedFigure;
 import javafx.scene.layout.VBox;
 
+/*
+ * Clase para modelar el layout de
+ * la aplicación
+ */
 public class MainFrame extends VBox {
 
     public MainFrame(CanvasState<WrappedFigure> canvasState) {

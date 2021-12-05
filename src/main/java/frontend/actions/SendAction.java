@@ -7,6 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+/*
+ * Clase padre para modelar acciones de SendToBack
+ * y SentToFront
+ */
 public abstract class SendAction extends CustomAction {
 
     protected final SortedSet<PositionData> before = new TreeSet<>();

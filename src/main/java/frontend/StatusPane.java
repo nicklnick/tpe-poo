@@ -4,6 +4,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
+/*
+ * clase para modelar la barra de información
+ * en la parte inferior de la aplicación.
+ */
 public class StatusPane extends BorderPane {
 
 	private final Label statusLabel;
