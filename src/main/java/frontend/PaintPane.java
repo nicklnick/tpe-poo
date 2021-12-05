@@ -8,11 +8,13 @@ import frontend.Exceptions.WrongDirectionException;
 import frontend.actions.*;
 import frontend.buttons.*;
 import frontend.wrappers.WrappedFigure;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -108,217 +110,243 @@ public class PaintPane extends BorderPane {
 		buttonsBox.setPrefWidth(100);
 
 		setLeft(buttonsBox);								// Posicionamiento de elementos
+		setLeft(buttonsBox);								// Posicionamiento de elementos
 		setRight(canvas);
 
-		canvas.setOnMousePressed(event -> {
-			startPoint = new Point(event.getX(), event.getY());
-		});
+		canvas.setOnMousePressed(this::mousePressedAction);
 
-		canvas.setOnMouseReleased(event -> {
-			Point endPoint = new Point(event.getX(), event.getY());
-			if(startPoint == null) {
-				return ;
-			}
-			try {
-				CustomButton selectedButton = customGroup.getSelectedButton();
-				if (selectedButton != null) {
-					WrappedFigure newFigure = selectedButton.createFigure(startPoint, endPoint, gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue());
-					if (newFigure != null) {
-						CustomAction action = new CreateAction(canvasState, newFigure);
-						manageStacks(action);
-						canvasState.addFigure(newFigure);
-					}
-				}
-			}catch(WrongDirectionException ex){
-				statusPane.updateStatus(ex.getMessage());
-			}
-			if (selectionMode) {
-				Figure imaginaryBox = new Rectangle(startPoint, endPoint);
-				for (WrappedFigure wrappedFigure : canvasState.figures()) {
-					if (imaginaryBox.contains(wrappedFigure.getFigure().getFirstPoint()) && imaginaryBox.contains(wrappedFigure.getFigure().getSecondPoint())) {
-						selectedFigures.add(wrappedFigure);
-					}
-				}
-			}
+		canvas.setOnMouseReleased(event -> mouseReleasedAction(event, customGroup));
 
-			startPoint = null;
-			redrawCanvas();
-		});
+		canvas.setOnMouseMoved(this::mouseMovedAction);
 
-		canvas.setOnMouseMoved(event -> {
-			Point eventPoint = new Point(event.getX(), event.getY());
-			boolean found = false;
-			StringBuilder label = new StringBuilder();
-			for(WrappedFigure wrappedFigure : canvasState.figures()) {
-				if( wrappedFigure.getFigure().contains(eventPoint) ) {
-					found = true;
-					label.append(wrappedFigure);
-				}
-			}
-			if(found) {
-				statusPane.updateStatus(label.toString());
-			} else {
-				statusPane.updateStatus(eventPoint.toString());
-			}
-		});
+		canvas.setOnMouseClicked(this::mouseClickedAction);
 
-		canvas.setOnMouseClicked(event -> {
-			boolean found = false;
-			StringBuilder label = new StringBuilder("Se seleccionó: ");
+		canvas.setOnMouseDragged(this::mouseDraggedAction);
 
-			if(!selectedFigures.isEmpty()) {				// Caso en cual se esta usando el drag para seleccionar
-				for(WrappedFigure figure : selectedFigures){
-					label.append(figure.toString());
-				}
-			}
-			else if(selectionButton.isSelected()){							// Caso en cual se hace click
-				Point eventPoint = new Point(event.getX(), event.getY());
-				List<WrappedFigure> list = canvasState.figures();
-				ListIterator<WrappedFigure> iterator = list.listIterator(list.size());			//Los elementos traceros son los que aparecen mas arriba
-				while(iterator.hasPrevious() && !found){
-					WrappedFigure wfig = iterator.previous();
-					if (wfig.getFigure().contains(eventPoint)) {
-						found = true;
-						selectedFigures.clear();
-						selectedFigures.add(wfig);
-						label.append(wfig);
+		sendToBackButton.setOnAction(event -> sendToBackButtonAction());
+		sendToFrontButton.setOnAction(event -> sendToFrontButtonAction());
 
-						updateSliderAndColorPicker(wfig);
-					}
-				}
-			}
-			if (found || (selectionMode && !selectedFigures.isEmpty())) {	// Se hace click sobre figura
-				statusPane.updateStatus(label.toString());
-			} else {														// Se hace click fuera de cualquier figura
-				selectedFigures.clear();
-				if(selectionButton.isSelected())
-					statusPane.updateStatus("Ninguna figura encontrada");
-			}
-			selectionMode = false;
-			redrawCanvas();
-		});
+		deleteButton.setOnAction(event -> deleteButtonAction());
 
-		canvas.setOnMouseDragged(event -> {
-			if( selectedFigures.isEmpty() && selectionButton.isSelected()){		//no hay figuras seleccionadas, se quiere seleccionar con imaginaryBox
-				selectionMode = true;
-				return;
-			}
-			Point eventPoint = new Point(event.getX(), event.getY());
-			double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
-			double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-			for(WrappedFigure figure : selectedFigures) {
-				figure.getFigure().move(diffX, diffY);
-			}
-			redrawCanvas();
-		});
+		undoButton.setOnAction(event -> undoButtonAction());
 
-		sendToBackButton.setOnAction(event -> {
-			try {
-				checkSelection(selectedFigures);
+		redoButton.setOnAction(event -> redoButtonAction());
 
-				CustomAction action = new SendToBackAction(canvasState, selectedFigures);
-				sendToBack(selectedFigures);
-				redrawCanvas();
-
-				manageStacks(action);
-
-			} catch(NoFigureSelectedException ex){
-				statusPane.updateStatus(ex.getMessage());
-			}
-		});
-		sendToFrontButton.setOnAction(event -> {
-			try {
-				checkSelection(selectedFigures);
-
-				CustomAction action = new SendToFrontAction(canvasState, selectedFigures);
-				sendToFront(selectedFigures);
-				redrawCanvas();
-
-				manageStacks(action);
-
-			} catch(NoFigureSelectedException ex){
-				statusPane.updateStatus(ex.getMessage());
-			}
-		});
-
-		deleteButton.setOnAction(event -> {
-			try {
-				checkSelection(selectedFigures);
-
-				CustomAction action = new DeleteAction(canvasState, selectedFigures);
-				manageStacks(action);
-
-				canvasState.figures().removeAll(selectedFigures);
-				selectedFigures.clear();
-				redrawCanvas();
-			}catch(NoFigureSelectedException ex){
-				statusPane.updateStatus(ex.getMessage());
-			}
-
-		});
-
-		undoButton.setOnAction(event -> {
-			try {
-				checkStack(undoStack, "deshacer");
-
-				undoState = true;
-				CustomAction action = undoStack.pop();
-				redoStack.push(action);
-				action.undo();
-				redrawCanvas();
-			}catch(HistoryStackException ex){
-				statusPane.updateStatus(ex.getMessage());
-			}
-		});
-
-		redoButton.setOnAction(event ->{
-			try{
-				checkStack(redoStack, "rehacer");
-				CustomAction action = redoStack.pop();
-				undoStack.push(action);
-				action.redo();
-				redrawCanvas();
-			}catch(HistoryStackException ex){
-				statusPane.updateStatus(ex.getMessage());
-			}
-		});
 		edgeWidth.setShowTickMarks(true);								// Configuracion de slider
 		edgeWidth.setShowTickLabels(true);
-		edgeWidth.setOnMouseReleased(event -> {
-			if(! selectedFigures.isEmpty()){
-				CustomAction action = new WidthAction(canvasState, selectedFigures, edgeWidth.getValue());
-				manageStacks(action);
+		edgeWidth.setOnMouseReleased(event -> edgeSliderAction());
 
-				for(WrappedFigure wrappedFigure : selectedFigures)
-					wrappedFigure.setEdgeWidth(edgeWidth.getValue());
-				redrawCanvas();
-			}
-		});
-
-		fillColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker1
-			if(! selectedFigures.isEmpty()){
-				CustomAction action = new ColorFillAction(canvasState, selectedFigures, fillColorPicker.getValue());
-				manageStacks(action);
-
-				for(WrappedFigure wrappedFigure : selectedFigures)
-					wrappedFigure.setFillColor(fillColorPicker.getValue());
-				redrawCanvas();
-			}
-		});
-		edgeColorPicker.valueProperty().addListener(event -> {			// Configuracion de colorpicker2
-			if(! selectedFigures.isEmpty()){
-				CustomAction action = new ColorEdgeAction(canvasState, selectedFigures, edgeColorPicker.getValue());
-				manageStacks(action);
-
-				for(WrappedFigure wrappedFigure : selectedFigures)
-					wrappedFigure.setEdgeColor(edgeColorPicker.getValue());
-				redrawCanvas();
-			}
-		});
+		fillColorPicker.valueProperty().addListener(event -> fillColorAction());
+		edgeColorPicker.valueProperty().addListener(event -> edgeColorAction());
 	}
 
-
 	/* PRIVATE METHODS */
+
+	private void mousePressedAction(MouseEvent event){
+		startPoint = new Point(event.getX(), event.getY());
+	}
+
+	private void mouseReleasedAction(MouseEvent event, CustomGroup customGroup){
+		Point endPoint = new Point(event.getX(), event.getY());
+		if(startPoint == null) {
+			return ;
+		}
+		try {
+			CustomButton selectedButton = customGroup.getSelectedButton();
+			if (selectedButton != null) {
+				WrappedFigure newFigure = selectedButton.createFigure(startPoint, endPoint, gc, edgeColorPicker.getValue(), fillColorPicker.getValue(), edgeWidth.getValue());
+				if (newFigure != null) {
+					CustomAction action = new CreateAction(canvasState, newFigure);
+					manageStacks(action);
+					canvasState.addFigure(newFigure);
+				}
+			}
+		}catch(WrongDirectionException ex){
+			statusPane.updateStatus(ex.getMessage());
+		}
+		if (selectionMode) {
+			Figure imaginaryBox = new Rectangle(startPoint, endPoint);
+			for (WrappedFigure wrappedFigure : canvasState.figures()) {
+				if (imaginaryBox.contains(wrappedFigure.getFigure().getFirstPoint()) && imaginaryBox.contains(wrappedFigure.getFigure().getSecondPoint())) {
+					selectedFigures.add(wrappedFigure);
+				}
+			}
+		}
+
+		startPoint = null;
+		redrawCanvas();
+	}
+
+	private void mouseMovedAction(MouseEvent event){
+		Point eventPoint = new Point(event.getX(), event.getY());
+		boolean found = false;
+		StringBuilder label = new StringBuilder();
+		for(WrappedFigure wrappedFigure : canvasState.figures()) {
+			if( wrappedFigure.getFigure().contains(eventPoint) ) {
+				found = true;
+				label.append(wrappedFigure);
+			}
+		}
+		if(found) {
+			statusPane.updateStatus(label.toString());
+		} else {
+			statusPane.updateStatus(eventPoint.toString());
+		}
+	}
+
+	private void mouseClickedAction(MouseEvent event){
+		boolean found = false;
+		StringBuilder label = new StringBuilder("Se seleccionó: ");
+
+		if(!selectedFigures.isEmpty()) {				// Caso en cual se esta usando el drag para seleccionar
+			for(WrappedFigure figure : selectedFigures){
+				label.append(figure.toString());
+			}
+		}
+		else if(selectionButton.isSelected()){							// Caso en cual se hace click
+			Point eventPoint = new Point(event.getX(), event.getY());
+			List<WrappedFigure> list = canvasState.figures();
+			ListIterator<WrappedFigure> iterator = list.listIterator(list.size());			//Los elementos traceros son los que aparecen mas arriba
+			while(iterator.hasPrevious() && !found){
+				WrappedFigure wfig = iterator.previous();
+				if (wfig.getFigure().contains(eventPoint)) {
+					found = true;
+					selectedFigures.clear();
+					selectedFigures.add(wfig);
+					label.append(wfig);
+
+					updateSliderAndColorPicker(wfig);
+				}
+			}
+		}
+		if (found || (selectionMode && !selectedFigures.isEmpty())) {	// Se hace click sobre figura
+			statusPane.updateStatus(label.toString());
+		} else {														// Se hace click fuera de cualquier figura
+			selectedFigures.clear();
+			if(selectionButton.isSelected())
+				statusPane.updateStatus("Ninguna figura encontrada");
+		}
+		selectionMode = false;
+		redrawCanvas();
+	}
+
+	private void mouseDraggedAction(MouseEvent event){
+		if( selectedFigures.isEmpty() && selectionButton.isSelected()){		//no hay figuras seleccionadas, se quiere seleccionar con imaginaryBox
+			selectionMode = true;
+			return;
+		}
+		Point eventPoint = new Point(event.getX(), event.getY());
+		double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
+		double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
+		for(WrappedFigure figure : selectedFigures) {
+			figure.getFigure().move(diffX, diffY);
+		}
+		redrawCanvas();
+	}
+
+	private void sendToBackButtonAction(){
+		try {
+			checkSelection(selectedFigures);
+
+			CustomAction action = new SendToBackAction(canvasState, selectedFigures);
+			sendToBack(selectedFigures);
+			redrawCanvas();
+
+			manageStacks(action);
+
+		} catch(NoFigureSelectedException ex){
+			statusPane.updateStatus(ex.getMessage());
+		}
+	}
+
+	private void sendToFrontButtonAction(){
+		try {
+			checkSelection(selectedFigures);
+
+			CustomAction action = new SendToFrontAction(canvasState, selectedFigures);
+			sendToFront(selectedFigures);
+			redrawCanvas();
+
+			manageStacks(action);
+
+		} catch(NoFigureSelectedException ex){
+			statusPane.updateStatus(ex.getMessage());
+		}
+	}
+
+	private void edgeColorAction(){
+		if(! selectedFigures.isEmpty()){
+			CustomAction action = new ColorEdgeAction(canvasState, selectedFigures, edgeColorPicker.getValue());
+			manageStacks(action);
+
+			for(WrappedFigure wrappedFigure : selectedFigures)
+				wrappedFigure.setEdgeColor(edgeColorPicker.getValue());
+			redrawCanvas();
+		}
+	}
+
+	private void fillColorAction(){
+		if(! selectedFigures.isEmpty()){
+			CustomAction action = new ColorFillAction(canvasState, selectedFigures, fillColorPicker.getValue());
+			manageStacks(action);
+
+			for(WrappedFigure wrappedFigure : selectedFigures)
+				wrappedFigure.setFillColor(fillColorPicker.getValue());
+			redrawCanvas();
+		}
+	}
+
+	private void edgeSliderAction(){
+		if(! selectedFigures.isEmpty()){
+			CustomAction action = new WidthAction(canvasState, selectedFigures, edgeWidth.getValue());
+			manageStacks(action);
+
+			for(WrappedFigure wrappedFigure : selectedFigures)
+				wrappedFigure.setEdgeWidth(edgeWidth.getValue());
+			redrawCanvas();
+		}
+	}
+
+	private void deleteButtonAction(){
+		try {
+			checkSelection(selectedFigures);
+
+			CustomAction action = new DeleteAction(canvasState, selectedFigures);
+			manageStacks(action);
+
+			canvasState.figures().removeAll(selectedFigures);
+			selectedFigures.clear();
+			redrawCanvas();
+		}catch(NoFigureSelectedException ex){
+			statusPane.updateStatus(ex.getMessage());
+		}
+	}
+
+	private void redoButtonAction(){
+		try{
+			checkStack(redoStack, "rehacer");
+			CustomAction action = redoStack.pop();
+			undoStack.push(action);
+			action.redo();
+			redrawCanvas();
+		}catch(HistoryStackException ex){
+			statusPane.updateStatus(ex.getMessage());
+		}
+	}
+
+	private void undoButtonAction(){
+		try {
+			checkStack(undoStack, "deshacer");
+
+			undoState = true;
+			CustomAction action = undoStack.pop();
+			redoStack.push(action);
+			action.undo();
+			redrawCanvas();
+		}catch(HistoryStackException ex){
+			statusPane.updateStatus(ex.getMessage());
+		}
+	}
 
 	/* Update data with shapes values */
 	private void updateSliderAndColorPicker(@NotNull WrappedFigure selectedFigure){
