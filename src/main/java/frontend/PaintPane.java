@@ -68,10 +68,17 @@ public class PaintPane extends BorderPane {
 	// StatusBar
 	private final StatusPane statusPane;
 
+	//stacks para mantener las acciones.
 	private final Stack<CustomAction> undoStack = new Stack<>();
 	private final Stack<CustomAction> redoStack = new Stack<>();
+	/*
+	 * Flag para saber si no está en el estado más actual.
+	 * Si se crea una nueva acción mientras que este flag
+	 * está encendido, se remueven las acciones de redoStack.
+	*/
 	private boolean undoState = false;
 
+	//flag para saber si se está queriendo hacer un rectángulo imaginario de selección
 	private boolean selectionMode = false;
 
 	public PaintPane(CanvasState<WrappedFigure> canvasState, StatusPane statusPane) {
