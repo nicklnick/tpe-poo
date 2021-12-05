@@ -9,8 +9,8 @@ import java.util.*;
 
 public abstract class SendAction extends CustomAction {
 
-    protected SortedSet<PositionData> before = new TreeSet<>();
-    protected SortedSet<PositionData> after = new TreeSet<>();
+    protected final SortedSet<PositionData> before = new TreeSet<>();
+    protected final SortedSet<PositionData> after = new TreeSet<>();
 
     public SendAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures) {
         super(state);

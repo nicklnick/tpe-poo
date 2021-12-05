@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PositionData implements Comparable<PositionData> {
 
-    private WrappedFigure figure;
-    private int position;               // Posicion de la figura en el array
+    private final WrappedFigure figure;
+    private final int position;               // Posicion de la figura en el array
 
     public PositionData(WrappedFigure figure, int position) {
         this.figure = figure;

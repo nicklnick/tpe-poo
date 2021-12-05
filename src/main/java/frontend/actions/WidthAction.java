@@ -9,7 +9,7 @@ import java.util.List;
 
 public class WidthAction extends GraphicAction<EdgeData> {
 
-    private double after;
+    private final double after;
 
     public WidthAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, double after) {
         super(state, figures);

@@ -24,14 +24,13 @@ import java.util.*;
 public class PaintPane extends BorderPane {
 
 	// BackEnd
-	private CanvasState<WrappedFigure> canvasState;
+	private final CanvasState<WrappedFigure> canvasState;
 
 	// Canvas y relacionados
-	private Canvas canvas = new Canvas(800, 600);
-	private GraphicsContext gc = canvas.getGraphicsContext2D();
+	private final Canvas canvas = new Canvas(800, 600);
+	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 	private static final Color LINE_COLOR = Color.BLACK;
 	private static final Color FILL_COLOR = Color.YELLOW;
-	private static final double LINE_WIDTH = 1;
 	private static final int DEF_MIN_SLIDER = 1;
 	private static final int DEF_MAX_SLIDER = 50;
 	private static final int DEF_INCREMENT_SLIDER = 1;
@@ -52,20 +51,20 @@ public class PaintPane extends BorderPane {
 	private final Button redoButton = new Button("Rehacer");
 
 	// FillColor Barra Izquierda
-	private ColorPicker fillColorPicker = new ColorPicker(FILL_COLOR);
+	private final ColorPicker fillColorPicker = new ColorPicker(FILL_COLOR);
 
 	// Edge Barra Izquierda
-	private ColorPicker edgeColorPicker = new ColorPicker(LINE_COLOR);
-	private Slider edgeWidth = new Slider(DEF_MIN_SLIDER, DEF_MAX_SLIDER, DEF_INCREMENT_SLIDER);
+	private final ColorPicker edgeColorPicker = new ColorPicker(LINE_COLOR);
+	private final Slider edgeWidth = new Slider(DEF_MIN_SLIDER, DEF_MAX_SLIDER, DEF_INCREMENT_SLIDER);
 
 	// Dibujar una figura
 	private Point startPoint;
 
 	// Seleccionar una figura
-	private List<WrappedFigure> selectedFigures;
+	private final List<WrappedFigure> selectedFigures;
 
 	// StatusBar
-	private StatusPane statusPane;
+	private final StatusPane statusPane;
 
 	private final Stack<CustomAction> undoStack = new Stack<>();
 	private final Stack<CustomAction> redoStack = new Stack<>();
@@ -156,7 +155,7 @@ public class PaintPane extends BorderPane {
 			for(WrappedFigure wrappedFigure : canvasState.figures()) {
 				if( wrappedFigure.getFigure().contains(eventPoint) ) {
 					found = true;
-					label.append(wrappedFigure.toString());
+					label.append(wrappedFigure);
 				}
 			}
 			if(found) {
@@ -185,7 +184,7 @@ public class PaintPane extends BorderPane {
 						found = true;
 						selectedFigures.clear();
 						selectedFigures.add(wfig);
-						label.append(wfig.toString());
+						label.append(wfig);
 
 						updateSliderAndColorPicker(wfig);
 					}
@@ -343,7 +342,7 @@ public class PaintPane extends BorderPane {
 		canvasState.figures().addAll(0, selectedFigures);
 	}
 
-	void redrawCanvas() {
+	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(WrappedFigure wrappedFigure : canvasState.figures()) {
 			if(selectedFigures.contains(wrappedFigure)) {

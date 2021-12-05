@@ -9,10 +9,10 @@ public abstract class WrappedFigure implements Drawable{
     private static final int INIT_ID = 1;
     private static int currentId = INIT_ID;
 
-    protected GraphicsContext gc;
-    protected Figure fig;
+    protected final GraphicsContext gc;
+    protected final Figure fig;
 
-    private int id;
+    private final int id;
     private Color edgeColor;
     private Color fillColor;
     private double edgeWidth;

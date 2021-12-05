@@ -5,8 +5,8 @@ package frontend.data;
  */
 public class EdgeData {
 
-    private int id;             // ID de la figura
-    private double width;       // Grosor de la figura
+    private final int id;             // ID de la figura
+    private final double width;       // Grosor de la figura
 
     public EdgeData(int id, double width){
         this.id = id;

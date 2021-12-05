@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class GraphicAction<T> extends CustomAction {
 
-    protected List<T> before = new LinkedList<>();
+    protected final List<T> before = new LinkedList<>();
 
     public GraphicAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures) {
         super(state);

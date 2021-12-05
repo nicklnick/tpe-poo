@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ColorEdgeAction extends GraphicAction<ColorData> {
 
-    private Color after;
+    private final Color after;
 
     public ColorEdgeAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, Color after) {
         super(state, figures);

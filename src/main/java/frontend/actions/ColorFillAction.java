@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ColorFillAction extends GraphicAction<ColorData> {
 
-    private Color after;
+    private final Color after;
 
     public ColorFillAction(CanvasState<WrappedFigure> state, List<WrappedFigure> figures, Color after) {
         super(state, figures);

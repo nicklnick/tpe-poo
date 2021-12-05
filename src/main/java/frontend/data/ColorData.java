@@ -7,8 +7,8 @@ import javafx.scene.paint.Color;
  */
 public class ColorData {
 
-    private int id;         // ID de la figura
-    private Color color;    // Color de la figura
+    private final int id;         // ID de la figura
+    private final Color color;    // Color de la figura
 
     public ColorData(int id, Color color){
         this.id = id;
